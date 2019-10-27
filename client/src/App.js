@@ -16,7 +16,8 @@ fetchGreeting = async () => {
 fetchFirst = async()=>{
   const response = await fetch('/api/getFirst');
   const resJSON= await response.json();
-  this.setState({first:resJSON.text});
+  //this.setState({first:resJSON.text});
+  console.log(resJSON);
 }
 render() {
     return (
