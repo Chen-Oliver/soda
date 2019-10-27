@@ -5,6 +5,16 @@ const app = express();
 const { Client } = require('pg');
 const path = require('path');
 
+const client = new Client({
+connectionString: process.env.DATABASE_URL,
+ssl: true,
+});
+
+process.on('unhandledRejection', error => {
+  // Will print "unhandledRejection err is not defined"
+  console.log('unhandledRejection', error.message);
+});
+
 // Serve our base route that returns a Hello World greeting
 app.get('/api/greet/', cors(), async (req, res, next) => {
   try {
@@ -14,25 +24,14 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
     next(err)
   }
 })
-
 // Serve our base route that returns a Hello World greeting
 app.get('/api/getFirst/', cors(), async (req, res, next) => {
-  try {
-    const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
+
+    client.connect();
+    const {rows} = await client.query('SELECT * FROM clothing;').catch((err)=>console.error(err));
+    res.send(rows[0]);
+    client.end();
   });
-  client.connect();
-    client.query('SELECT * FROM clothing;', (err, res) => {
-      if (err) throw err;
-      const greeting=JSON.stringify(res.rows[0]);
-      res.json(greeting);
-      client.end();
-    });
-  } catch (err) {
-    next(err)
-  }
-})
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
