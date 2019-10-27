@@ -29,12 +29,11 @@ const client = new Client({
 
 client.connect();
 
-client.query('CREATE TABLE clothing (name char(100));', (err, res) => {
+client.query('SELECT * FROM clothing;', (err, res) => {
   if (err) throw err;
-  // for (let row of res.rows) {
-  //   console.log(JSON.stringify(row));
-  // }
-  console.log("Created table");
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
   client.end();
 });
 
