@@ -1,7 +1,10 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
 // Create the server
-const app = express()
+const app = express();
+const { Client } = require('pg');
+const path = require('path');
+
 // Serve our base route that returns a Hello World greeting
 app.get('/api/greet/', cors(), async (req, res, next) => {
   try {
@@ -12,15 +15,12 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
   }
 })
 
-const path = require('path')
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
 // Anything that doesn't match the above, send back index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
-
-const { Client } = require('pg');
 
 const client = new Client({
   connectionString: process.env.DATABASE_URL,
@@ -29,11 +29,12 @@ const client = new Client({
 
 client.connect();
 
-client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+client.query('CREATE TABLE clothing (name char(100)); INSERT INTO clothing VALUES ("Grey Sweater")', (err, res) => {
   if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
+  // for (let row of res.rows) {
+  //   console.log(JSON.stringify(row));
+  // }
+  console.log("Created table and insert grey sweater");
   client.end();
 });
 
