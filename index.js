@@ -8,8 +8,27 @@ const path = require('path');
 // Serve our base route that returns a Hello World greeting
 app.get('/api/greet/', cors(), async (req, res, next) => {
   try {
-    const greeting={ text: 'Hello World!' };
+    const greeting={ text: 'Hello World! Welcome to the SODA App' };
     res.json(greeting)
+  } catch (err) {
+    next(err)
+  }
+})
+
+// Serve our base route that returns a Hello World greeting
+app.get('/api/getFirst/', cors(), async (req, res, next) => {
+  try {
+    const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+  });
+  client.connect();
+    client.query('SELECT * FROM clothing;', (err, res) => {
+      if (err) throw err;
+      const greeting=JSON.stringify(res.rows[0]);
+      res.json(greeting);
+      client.end();
+    });
   } catch (err) {
     next(err)
   }
@@ -22,20 +41,9 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
 
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
 
-client.connect();
 
-client.query('SELECT * FROM clothing;', (err, res) => {
-  if (err) throw err;
-  for (let row of res.rows) {
-    console.log(JSON.stringify(row));
-  }
-  client.end();
-});
+
 
 // Choose the port and start the server
 const PORT = process.env.PORT || 5000

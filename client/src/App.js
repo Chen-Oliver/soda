@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import './App.css'
 class App extends Component {
   state = {
-    text: ''
+    text: '',
+    first: ''
   }
 componentDidMount() {
     this.fetchGreeting();
@@ -12,10 +13,17 @@ fetchGreeting = async () => {
     const resJSON= await response.json();
     this.setState({text:resJSON.text});
   }
+fetchFirst = async()=>{
+  const response = await fetch('/api/getFirst');
+  const resJSON= await response.json();
+  this.setState({first:resJSON.text});
+}
 render() {
     return (
       <div className="App">
         <h3>{this.state.text}</h3>
+        <button type='submit' onClick={this.fetchFirst}>Show First</button>
+        <h3>{this.state.first}</h3>
       </div>
     )
   }
