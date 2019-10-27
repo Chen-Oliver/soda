@@ -11,6 +11,7 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
     next(err)
   }
 })
+
 const path = require('path')
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
@@ -18,6 +19,24 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
+
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
+client.connect();
+
+client.query('SELECT table_schema,table_name FROM information_schema.tables;', (err, res) => {
+  if (err) throw err;
+  for (let row of res.rows) {
+    console.log(JSON.stringify(row));
+  }
+  client.end();
+});
+
 // Choose the port and start the server
 const PORT = process.env.PORT || 5000
 app.listen(PORT, () => {
