@@ -36,10 +36,28 @@ form {
   display: flex;
   flex-direction: column;
   font-family: "Courier New", monospace;
+  border:1px solid gray;
+  padding:7px;
+  width:27em;
 }
 input {
-  font-size: 1.2em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
+  margin:none;
   border: 1px solid grey
+}
+.jumbotron{
+  background-image:url("sodabackground.jpeg");
+  background-size: 100%,100%;
+  background-color: white;
+  height:107vh;
+  width:100vw;
+  margin-top:-10vh;
+  text-align:center;
+}
+.jumbotron h1{
+  font-size:50px;
+  color:white;
+  text-shadow:2px 2px black;
+}
+#searchForm{
+  margin-top:15px;
 }

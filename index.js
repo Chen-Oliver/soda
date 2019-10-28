@@ -28,7 +28,7 @@ app.get('/api/getFirst/', cors(), async (req, res, next) => {
     });
     client.connect();
     const {rows} = await client.query('SELECT * FROM clothing;').catch((err)=>console.error(err));
-    res.send(rows[0]);
+    res.send(rows[Math.floor(Math.random()*100)]);
     client.end();
   });
 
