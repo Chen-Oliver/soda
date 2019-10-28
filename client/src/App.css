@@ -3,20 +3,22 @@
   flex-direction: column;
   align-items: center;
   margin: 2em;
-  white-space: pre
+  white-space: pre;
 }
 .App code {
   margin: 2em;
   margin-top: 0;
   padding: 0;
   text-align: left;
-  font-size: 2em;
+  font-size: 1em;
 }
 h3 {
-  font-size: 2.5em;
   margin: 1em;
   padding: 0;
-  border: 0
+  border: 0;
+}
+a{
+  color: hotpink;
 }
 button {
   font-size: 1em;

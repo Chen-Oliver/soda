@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import './App.css'
+
 class App extends Component {
   state = {
     text: '',
@@ -16,7 +17,13 @@ fetchGreeting = async () => {
 fetchRandom = async()=>{
   const response = await fetch('/api/getFirst');
   const resJSON= await response.json();
-  this.setState({random:"\n Type "+resJSON.type+ "\n Name: "+resJSON.name});
+  this.setState({random:
+    <div>
+      <span>{"\n Type: "+resJSON.type+"\n Name: "}</span>
+      <a target="_blank" href={resJSON.websiteurl}>{resJSON.name}</a>
+      <span>{"\n Brand: "+resJSON.brandname+ "\n Price: "+resJSON.price + "\n Gender: "+resJSON.gender}</span>
+    </div>
+  });
 }
 handleSubmit(event) {
     event.preventDefault();
