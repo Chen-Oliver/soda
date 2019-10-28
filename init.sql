@@ -64,7 +64,7 @@ INSERT INTO clothing (name, type, gender, price, websiteURL)
 VALUES ('Cotton Twill Trenchcoat', 'Coat', 'Male', 129, 'https://www2.hm.com/en_us/productpage.0755629001.html');
 
 INSERT INTO clothing (name, type, gender, price, websiteURL)
-VALUES ('Cotton Canvas Sneakers', 'Shoes', 'Male', , 'https://www2.hm.com/en_us/productpage.0766112001.html');
+VALUES ('Cotton Canvas Sneakers', 'Shoes', 'Male', 29.99, 'https://www2.hm.com/en_us/productpage.0766112001.html');
 
 INSERT INTO clothing (name, type, gender, price, websiteURL)
 VALUES ('Wool-blend Coat', 'Coat', 'Male', 99, 'https://www2.hm.com/en_us/productpage.0788301003.html');
