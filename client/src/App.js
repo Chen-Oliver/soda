@@ -40,9 +40,9 @@ handleSubmitInsert(event) {
 }
 handleSubmitSearch(event) {
     event.preventDefault();
-    const insertInputs =event.target.getElementsByClassName("search");
-    console.log("BrandName:"+insertInputs.brand.value);
-    console.log("Season:"+insertInputs.season.value);
+    const searchInputs =event.target.getElementsByClassName("search");
+    console.log("BrandName:"+searchInputs.brand.value);
+    console.log("Season:"+searchInputs.season.value);
     //search query here
     document.getElementById("searchForm").reset();
 }
