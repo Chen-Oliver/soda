@@ -5,15 +5,14 @@ CREATE TABLE brands (
 );
 
 CREATE TABLE clothing (
-  clothingID INTEGER NOT NULL,
   name VARCHAR(30) NOT NULL,
   type VARCHAR(20) NOT NULL,
   gender VARCHAR(10) NOT NULL,
   price REAL NOT NULL,
   websiteURL VARCHAR(256) NOT NULL,
   brandName VARCHAR(30) NOT NULL,
-  PRIMARY KEY(clothingID),
-  FOREIGN KEY brandName REFERENCES brands(brandName) ON DELETE CASCADE
+  PRIMARY KEY(websiteURL),
+  FOREIGN KEY (brandName) REFERENCES brands(brandName) ON DELETE CASCADE
 );
 
 CREATE TABLE colors (
@@ -21,14 +20,26 @@ CREATE TABLE colors (
   imageURL VARCHAR(256) NOT NULL,
   color VARCHAR(30),
   actual VARCHAR(30),
-  FOREIGN KEY websiteURL REFERENCES clothing(websiteURL) ON DELETE CASCADE
+  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
 );
 
 CREATE TABLE seasons (
   websiteURL VARCHAR(256) NOT NULL,
   season VARCHAR(15),
-  FOREIGN KEY websiteURL REFERENCES clothing(websiteURL) ON DELETE CASCADE
+  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
 );
+
+INSERT INTO brands (brandName, priceRange)
+VALUES ('H&M', '$');
+
+INSERT INTO brands (brandName, priceRange)
+VALUES ('Banana Republic', '$$');
+
+INSERT INTO brands (brandName, priceRange)
+VALUES ('APC', '$$$');
+
+INSERT INTO brands (brandName, priceRange)
+VALUES ('JCrew', '$$');
 
 INSERT INTO clothing (name, type, gender, price, websiteURL)
 VALUES ('Patterned Sweatshorts', 'Pants', 'Male', 17.99, 'https://www2.hm.com/en_us/productpage.0456032021.html');
