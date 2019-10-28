@@ -1,16 +1,16 @@
 CREATE TABLE brands (
-  brandName VARCHAR(30) NOT NULL,
+  brandName VARCHAR(256) NOT NULL,
   priceRange VARCHAR(3),
   PRIMARY KEY(brandName)
 );
 
 CREATE TABLE clothing (
-  name VARCHAR(30) NOT NULL,
-  type VARCHAR(20) NOT NULL,
-  gender VARCHAR(10) NOT NULL,
+  name VARCHAR(256) NOT NULL,
+  type VARCHAR(256) NOT NULL,
+  gender VARCHAR(256) NOT NULL,
   price REAL NOT NULL,
   websiteURL VARCHAR(256) NOT NULL,
-  brandName VARCHAR(30) NOT NULL,
+  brandName VARCHAR(256) NOT NULL,
   PRIMARY KEY(websiteURL),
   FOREIGN KEY (brandName) REFERENCES brands(brandName) ON DELETE CASCADE
 );
@@ -18,14 +18,14 @@ CREATE TABLE clothing (
 CREATE TABLE colors (
   websiteURL VARCHAR(256) NOT NULL,
   imageURL VARCHAR(256) NOT NULL,
-  color VARCHAR(30),
-  actual VARCHAR(30),
+  color VARCHAR(256),
+  actual VARCHAR(256),
   FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
 );
 
 CREATE TABLE seasons (
   websiteURL VARCHAR(256) NOT NULL,
-  season VARCHAR(15),
+  season VARCHAR(256),
   FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
 );
 
