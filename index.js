@@ -30,7 +30,38 @@ app.get('/api/getFirst/', cors(), async (req, res, next) => {
     const {rows} = await client.query('SELECT * FROM clothing;').catch((err)=>console.error(err));
     res.send(rows[Math.floor(Math.random()*100)]);
     client.end();
-  });
+});
+
+app.get('/api/allClothes_ColorSeason/', cors(), async (req, res, next) => {
+    const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+    const {rows} = await client.query('SELECT name, color, season, websiteUrl FROM clothing NATURAL JOIN colors NATURAL JOIN seasons;').catch((err)=>console.error(err));
+    var dict = {};
+    for (let i = 0; i < rows.length; i++) {
+        let name = rows[i]["name"];
+        let color = rows[i]["color"];
+        let season = rows[i]["season"];
+        let websiteURL = rows[i]["websiteurl"];
+        if (name in dict) {
+            dict[name].colors.push(color);
+            dict[name].seasons.push(season);
+            dict[name].websiteURLs.push(websiteURL);
+        } else {
+            dict[name] = {
+                "name": name,
+                "colors": [color],
+                "seasons": [season],
+                "websiteURLs":[websiteURL]
+            }
+        }
+    }
+    res.send(dict);
+    client.end();
+});
+
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
