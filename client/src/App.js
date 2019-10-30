@@ -27,7 +27,7 @@ fetchRandom = async()=>{
   });
 }
 
-async handleSubmitInsert(event) {
+handleSubmitInsert=async(event)=> {
     event.preventDefault();
     const insertInputs =event.target.getElementsByClassName("insert");
     let name = insertInputs.name.value, type = insertInputs.type.value, gender = insertInputs.gender.value, price = insertInputs.price.value,
@@ -40,16 +40,20 @@ async handleSubmitInsert(event) {
     console.log("WebsiteURL:"+websiteURL);
     console.log("BrandName:"+brand_name);
     //insert query here
+
+    websiteURL = encodeURIComponent(websiteURL);
+    imageURL = encodeURIComponent(imageURL);
     
     // const response = await fetch('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageURL/:color/:season');
-    // const response = await fetch('/api/insert/'+name+'/'+type+'/'+gender+'/'+price+'/'+websiteURL+'/'+brand_name+'/'+imageURL+'/'+color+'/'+season);
-    const response = await fetch('/api/insert')
+    const response = await fetch('/api/insert/'+name+'/'+type+'/'+gender+'/'+price+'/'+websiteURL+'/'+brand_name+'/'+imageURL+'/'+color+'/'+season);
+    // const response = await fetch('/api/insert')
     const resJSON = await response.json();
     this.setState({text:resJSON.text});
+    console.log("response: " +  resJSON)
 
     document.getElementById("insertForm").reset();
 }
-handleSubmitSearch(event) {
+handleSubmitSearch=async(event)=> {
     event.preventDefault();
     const searchInputs =event.target.getElementsByClassName("search");
     console.log("BrandName:"+searchInputs.brand.value);

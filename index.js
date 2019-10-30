@@ -32,31 +32,39 @@ app.get('/api/getFirst/', cors(), async (req, res, next) => {
     client.end();
   });
 // Insert into our database
-// app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageURL/:color/:season', cors(), async (req, res, next) => {
-app.get('/api/insert', cors(), async (req, res, next) => {
+app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageURL/:color/:season/', cors(), async (req, res, next) => {
+// app.get('/api/insert/', cors(), async (req, res, next) => {
+
   const client = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: true,
   });
   client.connect();
-  console.log("hello");
+  // var message = 'hello';
+
+  var websiteURL = decodeURIComponent(req.params.websiteURL);
+  var imageURL = decodeURIComponent(req.params.imageURL);
   // // check price range
-  // price_range = '$$'
-  // const {rows1} = await client.query('INSERT INTO brands(brandName, priceRange) \
-  // VALUES(' + req.param.brand_name + price_range + ')').catch((err)=>console.error(err));
+  var price_range = '$$';
+  let text = 'INSERT INTO brands(brandName, priceRange)  VALUES($1, $2) RETURNING *';
+  let values = [req.params.brand_name, price_range];
+  await client.query(text, values).catch((err)=>console.error(err));
 
-  // const {rows2} = await client.query('INSERT INTO clothing(name, type, gender, price, websiteURL, brandName) \
-  // VALUES(' + req.param.name + req.param.type + req.param.gender + req.param.price + req.param. websiteURL + req.param.brand_name + ')').catch((err)=>console.error(err));
-  
-  // const {rows3} = await client.query('INSERT INTO colors(websiteURL, imageURL, color) \
-  // VALUES(' + req.param.websiteURL + req.param.imageURL + req.param.color + ')').catch((err)=>console.error(err));
+  text = 'INSERT INTO clothing(name, type, gender, price, websiteURL, brandName) VALUES($1, $2, $3, $4, $5, %6)';
+  values = [req.params.name, req.params.type, req.params.gender, req.params.price, websiteURL, req.params.brand_name]
+  await client.query(text, values).catch((err)=>console.error(err));
 
-  // const {rows4} = await client.query('INSERT INTO seasons(websiteURL, season) \
-  // VALUES(' + req.param.websiteURL + req.param.season + ')').catch((err)=>console.error(err));
+  text =  'INSERT INTO colors(websiteURL, imageURL, color) VALUES($1, $2, $3)';
+  values = [websiteURL, imageURL, req.params.color];
+  await client.query(text, values).catch((err)=>console.error(err));
+
+  text = 'INSERT INTO seasons(websiteURL, season) VALUES($1, $2)';
+  values = [websiteURL, req.params.season];
+  await client.query(text, values).catch((err)=>console.error(err));
   
-  // const message = { text: "should've inserted " + req.param.name + req.param.type + req.param.gender + req.param.price + req.param.websiteURL +
-  //  req.param.brand_name + req.param.imageURL + req.param.color + req.param.season };
-  // res.json(message);
+  const message = { text: "should've inserted " + req.params.name + req.params.type + req.params.gender + req.params.price + req.params.websiteURL +
+   req.params.brand_name + imageURL + req.params.color + req.params.season };
+  res.json(message);
   client.end();
 });
 
