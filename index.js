@@ -59,23 +59,23 @@ app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageUR
   client.connect();
   // var message = 'hello';
 
-  var websiteURL = decodeURIComponent(req.params.websiteURL);
-  var imageURL = decodeURIComponent(req.params.imageURL);
+  var websiteURL = decodeURI(req.params.websiteURL);
+  var imageURL = decodeURI(req.params.imageURL);
   // // check price range
   var price_range = '$$';
-  let text = 'INSERT INTO brands(brandName, priceRange)  VALUES($1, $2) RETURNING *';
-  let values = [req.params.brand_name, price_range];
+  var text = 'INSERT INTO brands(brandName, priceRange)  VALUES($1, $2);';
+  var values = [req.params.brand_name, price_range];
   await client.query(text, values).catch((err)=>console.error(err));
 
-  text = 'INSERT INTO clothing(name, type, gender, price, websiteURL, brandName) VALUES($1, $2, $3, $4, $5, %6)';
+  text = 'INSERT INTO clothing(name, type, gender, price, websiteURL, brandName) VALUES($1, $2, $3, $4, $5, $6);';
   values = [req.params.name, req.params.type, req.params.gender, req.params.price, websiteURL, req.params.brand_name]
   await client.query(text, values).catch((err)=>console.error(err));
 
-  text =  'INSERT INTO colors(websiteURL, imageURL, color) VALUES($1, $2, $3)';
+  text =  'INSERT INTO colors(websiteURL, imageURL, color) VALUES($1, $2, $3);';
   values = [websiteURL, imageURL, req.params.color];
   await client.query(text, values).catch((err)=>console.error(err));
 
-  text = 'INSERT INTO seasons(websiteURL, season) VALUES($1, $2)';
+  text = 'INSERT INTO seasons(websiteURL, season) VALUES($1, $2);';
   values = [websiteURL, req.params.season];
   await client.query(text, values).catch((err)=>console.error(err));
 

@@ -79,7 +79,7 @@ handleSubmitInsert=async(event)=> {
     // const response = await fetch('/api/insert')
     const resJSON = await response.json();
     //this.setState({text:resJSON.text});
-    console.log("insert response received: " +  resJSON + "\n");
+    console.log("response: " +  JSON.stringify(resJSON.text));
 
     document.getElementById("insertForm").reset();
 }
@@ -115,76 +115,76 @@ handleUpdate=async(event)=>{
           <h1>{this.state.text}</h1>
         </div>
       </div>
-        <Form id="insertForm" onSubmit={this.handleSubmitInsert}>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsName">
-              <Form.Label>Name:</Form.Label>
-              <Form.Control className="insert" type="text" name="name" required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsColor">
-              <Form.Label>Color:</Form.Label>
-              <Form.Control className="insert" type="text" name="color" required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsSeason">
-              <Form.Label>Season:</Form.Label>
-              <Form.Control as="select" defaultValue="Male" className="insert" name="season" required>
-                <option>Fall</option>
-                <option>Winter</option>
-                <option>Summer</option>
-                <option>Spring</option>
-              </Form.Control>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsType">
-              <Form.Label>Type:</Form.Label>
-              <Form.Control className="insert" type="text" name="type" required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsGender">
-              <Form.Label>Gender:</Form.Label>
-              <Form.Control as="select" defaultValue="Male" className="insert" name="gender" required>
-                <option>Male</option>
-                <option>Female</option>
-              </Form.Control>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsPrice">
-              <Form.Label>Price:</Form.Label>
-              <Form.Control className="insert" type="number" step="0.01" name="price" required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsURL">
-              <Form.Label>Website URL:</Form.Label>
-              <Form.Control type="url" className="insert" name="websiteURL" placeholder="https://example.com"
-                      pattern="https://.*"
-                      required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsImageURL">
-              <Form.Label>Image URL:</Form.Label>
-              <Form.Control type="url" className="insert" name="imageURL" placeholder="https://example.com"
-                      pattern="https://.*"
-                      required/>
-            </Form.Group>
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} controlId="formGridInsBrand">
-              <Form.Label>Brand Name:</Form.Label>
-              <Form.Control type="text" className="insert" name="BrandName" required/>
-            </Form.Group>
-          </Form.Row>
-          <Button variant="primary" type="submit">
-            Insert Clothing
-          </Button>
+      <Form id="insertForm" onSubmit={this.handleSubmitInsert}>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsName">
+            <Form.Label>Name:</Form.Label>
+            <Form.Control className="insert" type="text" name="name" required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsColor">
+            <Form.Label>Color:</Form.Label>
+            <Form.Control className="insert" type="text" name="color" required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsSeason">
+            <Form.Label>Season:</Form.Label>
+            <Form.Control as="select" defaultValue="Male" className="insert" name="season" required>
+              <option>Fall</option>
+              <option>Winter</option>
+              <option>Summer</option>
+              <option>Spring</option>
+            </Form.Control>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsType">
+            <Form.Label>Type:</Form.Label>
+            <Form.Control className="insert" type="text" name="type" required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsGender">
+            <Form.Label>Gender:</Form.Label>
+            <Form.Control as="select" defaultValue="Male" className="insert" name="gender" required>
+              <option>Male</option>
+              <option>Female</option>
+            </Form.Control>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsPrice">
+            <Form.Label>Price:</Form.Label>
+            <Form.Control className="insert" type="number" step="0.01" name="price" required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsURL">
+            <Form.Label>Website URL:</Form.Label>
+            <Form.Control type="url" className="insert" name="websiteURL" placeholder="https://example.com"
+                    pattern="https://.*"
+                    required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsImageURL">
+            <Form.Label>Image URL:</Form.Label>
+            <Form.Control type="url" className="insert" name="imageURL" placeholder="https://example.com"
+                    pattern="https://.*"
+                    required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridInsBrand">
+            <Form.Label>Brand Name:</Form.Label>
+            <Form.Control type="text" className="insert" name="BrandName" required/>
+          </Form.Group>
+        </Form.Row>
+        <Button variant="primary" type="submit">
+          Insert Clothing
+        </Button>
         </Form>
 
         <Form id="searchForm" onSubmit={this.handleSubmitSearch}>
