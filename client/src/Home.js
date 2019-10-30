@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
-import {Form,Col,Button} from 'react-bootstrap';
+import {Form,Col,Button,Table} from 'react-bootstrap';
 import './Home.css'
 class Home extends Component{
-  state = {
-    text: ''
+  constructor(props){
+    super(props);
+    this.state = {
+      text: '',
+      search:[]
+    }
+    this.showSearchResults=this.showSearchResults.bind(this);
   }
 componentDidMount() {
     this.fetchGreeting();
@@ -13,6 +18,44 @@ fetchGreeting = async () => {
     const resJSON= await response.json();
     this.setState({text:resJSON.text});
   }
+showSearchResults(){
+  if(this.state.search.length>0){
+    return(
+      <Table striped bordered hover>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Color</th>
+            <th>Season</th>
+            <th>Website URL</th>
+          </tr>
+        </thead>
+        <tbody>
+          {this.state.search.map((result)=><tr>
+            <td>{result.name}</td>
+            <td>{result.color}</td>
+            <td>{result.season}</td>
+            <td>{result.websiteURL}</td>
+            </tr>
+          )}
+        </tbody>
+      </Table>
+    )
+  }
+}
+handleSubmitDelete=async(event)=> {
+  event.preventDefault();
+  const deleteInputs =event.target.getElementsByClassName("delete");
+  let websiteURL = deleteInputs.delWebsiteURL.value;
+  websiteURL = encodeURIComponent(websiteURL);
+
+  const response = await fetch('/api/delete/'+websiteURL);
+  const resJSON = await response.json();
+
+  console.log("delete: "+resJSON.text);
+
+  document.getElementById("deleteForm").reset();
+}
 
 handleSubmitInsert=async(event)=> {
     event.preventDefault();
@@ -35,18 +78,33 @@ handleSubmitInsert=async(event)=> {
     const response = await fetch('/api/insert/'+name+'/'+type+'/'+gender+'/'+price+'/'+websiteURL+'/'+brand_name+'/'+imageURL+'/'+color+'/'+season);
     // const response = await fetch('/api/insert')
     const resJSON = await response.json();
-    this.setState({text:resJSON.text});
-    console.log("response: " +  resJSON)
+    //this.setState({text:resJSON.text});
+    console.log("insert response received: " +  resJSON + "\n");
 
     document.getElementById("insertForm").reset();
 }
 handleSubmitSearch=async(event)=> {
     event.preventDefault();
     const searchInputs =event.target.getElementsByClassName("search");
+    let brand = searchInputs.brand.value;
+    let season = searchInputs.season.value;
     console.log("BrandName:"+searchInputs.brand.value);
     console.log("Season:"+searchInputs.season.value);
     //search query here
+    const response = await fetch('/api/search/'+brand+'/'+season);
+    const resJSON = await response.json();
     document.getElementById("searchForm").reset();
+}
+handleUpdate=async(event)=>{
+  event.preventDefault();
+  const updateInputs =event.target.getElementsByClassName("update");
+  let name = updateInputs.name.value;
+  let websiteURL = updateInputs.websiteURL.value;
+  websiteURL=encodeURIComponent(websiteURL);
+  const response = await fetch('/api/update/'+websiteURL+'/'+name);
+  const resJSON = await response.json();
+  console.log("update response received:"+resJSON+"\n");
+  document.getElementById("updateForm").reset();
 }
   render(){
     return(
@@ -56,8 +114,6 @@ handleSubmitSearch=async(event)=> {
           <h1>{this.state.text}</h1>
         </div>
       </div>
-        <button type='submit' onClick={this.fetchRandom}>Show Random</button>
-        <h3>{this.state.random}</h3>
         <Form id="insertForm" onSubmit={this.handleSubmitInsert}>
           <Form.Row>
             <Form.Group as={Col} controlId="formGridInsName">
@@ -151,7 +207,38 @@ handleSubmitSearch=async(event)=> {
           <Button variant="primary" type="submit">
             Search
           </Button>
+          {this.showSearchResults()}
         </Form>
+        <Form id="updateForm" onSubmit={this.handleUpdate}>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridUpdateWebsiteURL">
+            <Form.Label>WebsiteURL:</Form.Label>
+            <Form.Control className="update" type="text" name="websiteURL" required/>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} controlId="formGridUpdateWebsiteURL">
+            <Form.Label>Name:</Form.Label>
+            <Form.Control className="update" type="text" name="name" required/>
+          </Form.Group>
+        </Form.Row>
+        <Button variant="primary" type="submit">
+          Update
+        </Button>
+        </Form>
+        <Form id="deleteForm" onSubmit={this.handleSubmitDelete}>
+         <Form.Row>
+           <Form.Group as={Col} controlId="formGridDelWebsiteURL">
+             <Form.Label>Website URL:</Form.Label>
+             <Form.Control type="url" className="delete" name="delWebsiteURL" placeholder="https://example.com"
+                     pattern="https://.*"
+                     required/>
+           </Form.Group>
+         </Form.Row>
+         <Button variant="primary" type="submit">
+             Delete Clothing
+         </Button>
+       </Form>
       </div>
 
     )

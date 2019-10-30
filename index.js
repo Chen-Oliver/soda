@@ -20,6 +20,23 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
     next(err)
   }
 })
+app.get('/api/delete/:websiteURL/', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+
+  var websiteURL = decodeURIComponent(req.params.websiteURL);
+  text = 'DELETE FROM clothing WHERE websiteURL = $1';
+  values = [websiteURL];
+  await client.query(text, values).catch((err)=>console.error(err));
+
+  const message = { text: "deleted "+websiteURL};
+  res.json(message);
+  client.end();
+});
+
 // Serve our base route that returns a Hello World greeting
 app.get('/api/getFirst/', cors(), async (req, res, next) => {
     const client = new Client({
