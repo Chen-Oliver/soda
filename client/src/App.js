@@ -49,10 +49,25 @@ handleSubmitInsert=async(event)=> {
     // const response = await fetch('/api/insert')
     const resJSON = await response.json();
     this.setState({text:resJSON.text});
-    console.log("response: " +  resJSON)
+    console.log("response: " +  resJSON.text)
 
     document.getElementById("insertForm").reset();
 }
+
+handleSubmitDelete=async(event)=> {
+  event.preventDefault();
+  const deleteInputs =event.target.getElementsByClassName("delete");
+  let websiteURL = deleteInputs.delWebsiteURL.value;
+  websiteURL = encodeURIComponent(websiteURL);
+
+  const response = await fetch('/api/delete/'+websiteURL);
+  const resJSON = await response.json();
+
+  console.log("delete: "+resJSON.text);
+
+  document.getElementById("deleteForm").reset();
+}
+
 handleSubmitSearch=async(event)=> {
     event.preventDefault();
     const searchInputs =event.target.getElementsByClassName("search");
@@ -142,6 +157,22 @@ render() {
             Insert Clothing
           </Button>
         </Form>
+
+        <Form id="deleteForm" onSubmit={this.handleSubmitDelete}>
+          <Form.Row>
+            <Form.Group as={Col} controlId="formGridDelWebsiteURL">
+              <Form.Label>Website URL:</Form.Label>
+              <Form.Control type="url" className="delete" name="delWebsiteURL" placeholder="https://example.com"
+                      pattern="https://.*"
+                      required/>
+            </Form.Group>
+          </Form.Row>
+          <Button variant="primary" type="submit">
+              Delete Clothing
+          </Button>
+        </Form>
+
+
 
         <Form id="searchForm" onSubmit={this.handleSubmitSearch}>
           <Form.Row>

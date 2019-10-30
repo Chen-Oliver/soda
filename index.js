@@ -68,6 +68,22 @@ app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageUR
   client.end();
 });
 
+app.get('/api/delete/:websiteURL/', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  
+  var websiteURL = decodeURIComponent(req.params.websiteURL);
+  text = 'DELETE FROM clothing WHERE websiteURL = $1';
+  values = [websiteURL];
+  await client.query(text, values).catch((err)=>console.error(err));
+
+  const message = { text: "deleted "+websiteURL};
+  res.json(message);
+  client.end();
+});
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
