@@ -85,7 +85,32 @@ app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageUR
   client.end();
 });
 
+app.get('/api/search/:brandName/:season/', cors(), async (req, res, next) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    });
 
+    client.connect();
+    let brandName = "\'" + req.params.brandName + "\'";
+    let season = "\'" + req.params.season + "\'";
+
+    const {rows} = await client.query('SELECT name, color, season, websiteUrl FROM clothing NATURAL JOIN colors NATURAL JOIN seasons NATURAL JOIN brands WHERE season = ' + season + " AND brandName = " + brandName + " ORDER BY websiteurl, color;").catch((err)=>console.error(err));
+    // res.send(rows.splice(0,5));
+    res.send(rows.splice(0,5));
+    client.end();
+});
+
+app.get('/api/update/:name/:url/', cors(), async (req, res, next) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    });
+
+    client.connect();
+    const {rows} = await client.query('UPDATE clothing SET name=\'' + req.params.name + '\' WHERE websiteURL=\'' + decodeURI(req.params.url) + '\';').catch((err)=>console.error(err));
+    client.end();
+});
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
 // Anything that doesn't match the above, send back index.html

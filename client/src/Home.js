@@ -35,7 +35,7 @@ showSearchResults(){
             <td>{result.name}</td>
             <td>{result.color}</td>
             <td>{result.season}</td>
-            <td>{result.websiteURL}</td>
+            <td>{result.websiteurl}</td>
             </tr>
           )}
         </tbody>
@@ -93,6 +93,7 @@ handleSubmitSearch=async(event)=> {
     //search query here
     const response = await fetch('/api/search/'+brand+'/'+season);
     const resJSON = await response.json();
+    this.setState({search:resJSON});
     document.getElementById("searchForm").reset();
 }
 handleUpdate=async(event)=>{
@@ -101,10 +102,10 @@ handleUpdate=async(event)=>{
   let name = updateInputs.name.value;
   let websiteURL = updateInputs.websiteURL.value;
   websiteURL=encodeURIComponent(websiteURL);
-  const response = await fetch('/api/update/'+websiteURL+'/'+name);
+  document.getElementById("updateForm").reset();
+  const response = await fetch('/api/update/'+name+'/'+websiteURL);
   const resJSON = await response.json();
   console.log("update response received:"+resJSON+"\n");
-  document.getElementById("updateForm").reset();
 }
   render(){
     return(
@@ -207,8 +208,8 @@ handleUpdate=async(event)=>{
           <Button variant="primary" type="submit">
             Search
           </Button>
-          {this.showSearchResults()}
         </Form>
+        {this.showSearchResults()}
         <Form id="updateForm" onSubmit={this.handleUpdate}>
         <Form.Row>
           <Form.Group as={Col} controlId="formGridUpdateWebsiteURL">
