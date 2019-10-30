@@ -12,7 +12,7 @@ CREATE TABLE clothing (
   websiteURL VARCHAR(256) NOT NULL,
   brandName VARCHAR(256) NOT NULL,
   PRIMARY KEY(websiteURL),
-  FOREIGN KEY (brandName) REFERENCES brands(brandName) ON DELETE CASCADE
+  FOREIGN KEY (brandName) REFERENCES brands(brandName) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE colors (
@@ -20,13 +20,13 @@ CREATE TABLE colors (
   imageURL VARCHAR(256) NOT NULL,
   color VARCHAR(256),
   actual VARCHAR(256),
-  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
+  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE seasons (
   websiteURL VARCHAR(256) NOT NULL,
   season VARCHAR(256),
-  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE
+  FOREIGN KEY (websiteURL) REFERENCES clothing(websiteURL) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO brands (brandName, priceRange)
@@ -361,7 +361,7 @@ INSERT INTO colors (websiteURL, imageURL, color, actual) VALUES ('https://www.jc
 INSERT INTO colors (websiteURL, imageURL, color, actual) VALUES ('https://www.jcrew.com/p/womens_category/shorts/3inch/paperbag-short-in-seersucker/L4986?color_name=white-blossom', 'https://www.jcrew.com/s7-img-facade/L4986_WQ6882?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'Misty Peri Seersucker', 'Blue');
 INSERT INTO colors (websiteURL, imageURL, color, actual) VALUES ('https://www.jcrew.com/p/mens_category/shoes_sneakers/exclusives/seavees-x-jcrew-coronado-boots/M1590?color_name=cocoa-brown', 'https://www.jcrew.com/s7-img-facade/M1590_EB5026?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'Cocoa Brown', 'Brown');
 
-INSERT INTO seasons (websiteURL, season) VALUES ('https://www2.hm.com/en_us/productpage.0456032021.html', 'Summer');
+    INSERT INTO seasons (websiteURL, season) VALUES ('https://www2.hm.com/en_us/productpage.0456032021.html', 'Summer');
 INSERT INTO seasons (websiteURL, season) VALUES ('https://www2.hm.com/en_us/productpage.0685814005.html', 'Winter');
 INSERT INTO seasons (websiteURL, season) VALUES ('https://www2.hm.com/en_us/productpage.0685814005.html', 'Fall');
 INSERT INTO seasons (websiteURL, season) VALUES ('https://www2.hm.com/en_us/productpage.0685814005.html', 'Spring');

@@ -32,36 +32,32 @@ app.get('/api/getFirst/', cors(), async (req, res, next) => {
     client.end();
 });
 
-app.get('/api/allClothes_ColorSeason/', cors(), async (req, res, next) => {
+app.get('/api/search/:brandName/:season/', cors(), async (req, res, next) => {
     const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-    ssl: true,
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
     });
+
     client.connect();
-    const {rows} = await client.query('SELECT name, color, season, websiteUrl FROM clothing NATURAL JOIN colors NATURAL JOIN seasons;').catch((err)=>console.error(err));
-    var dict = {};
-    for (let i = 0; i < rows.length; i++) {
-        let name = rows[i]["name"];
-        let color = rows[i]["color"];
-        let season = rows[i]["season"];
-        let websiteURL = rows[i]["websiteurl"];
-        if (name in dict) {
-            dict[name].colors.push(color);
-            dict[name].seasons.push(season);
-            dict[name].websiteURLs.push(websiteURL);
-        } else {
-            dict[name] = {
-                "name": name,
-                "colors": [color],
-                "seasons": [season],
-                "websiteURLs":[websiteURL]
-            }
-        }
-    }
-    res.send(dict);
+    let brandName = "\'" + req.params.brandName + "\'";
+    let season = "\'" + req.params.season + "\'";
+
+    const {rows} = await client.query('SELECT name, color, season, websiteUrl FROM clothing NATURAL JOIN colors NATURAL JOIN seasons NATURAL JOIN brands WHERE season = ' + season + " AND brandName = " + brandName + " ORDER BY websiteurl, color;").catch((err)=>console.error(err));
+    // res.send(rows.splice(0,5));
+    console.log(rows.splice(0,5));
     client.end();
 });
 
+app.get('/api/update/:name/:url/', cors(), async (req, res, next) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    });
+
+    client.connect();
+    const {rows} = await client.query('UPDATE clothing SET name=\'' + req.params.name + '\' WHERE websiteURL=\'' + decodeURI(req.params.url) + '\';').catch((err)=>console.error(err));
+    client.end();
+});
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
@@ -69,10 +65,6 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
 })
-
-
-
-
 
 // Choose the port and start the server
 const PORT = process.env.PORT || 5000

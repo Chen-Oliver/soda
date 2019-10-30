@@ -16,7 +16,9 @@ fetchGreeting = async () => {
     this.setState({text:resJSON.text});
   }
 fetchRandom = async()=>{
-  const response = await fetch('/api/getFirst');
+  let url = encodeURIComponent("https://www2.hm.com/en_us/productpage.0456032021.html");
+  const response = await fetch('/api/search/H&M/Summer');
+  // const response = await fetch('/api/update/newname/' + url + "/");
   const resJSON= await response.json();
   this.setState({random:
     <div>
