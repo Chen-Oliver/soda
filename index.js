@@ -31,6 +31,35 @@ app.get('/api/getFirst/', cors(), async (req, res, next) => {
     res.send(rows[Math.floor(Math.random()*100)]);
     client.end();
   });
+// Insert into our database
+// app.get('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageURL/:color/:season', cors(), async (req, res, next) => {
+app.get('/api/insert', cors(), async (req, res, next) => {
+  const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+  });
+  client.connect();
+  console.log("hello");
+  // // check price range
+  // price_range = '$$'
+  // const {rows1} = await client.query('INSERT INTO brands(brandName, priceRange) \
+  // VALUES(' + req.param.brand_name + price_range + ')').catch((err)=>console.error(err));
+
+  // const {rows2} = await client.query('INSERT INTO clothing(name, type, gender, price, websiteURL, brandName) \
+  // VALUES(' + req.param.name + req.param.type + req.param.gender + req.param.price + req.param. websiteURL + req.param.brand_name + ')').catch((err)=>console.error(err));
+  
+  // const {rows3} = await client.query('INSERT INTO colors(websiteURL, imageURL, color) \
+  // VALUES(' + req.param.websiteURL + req.param.imageURL + req.param.color + ')').catch((err)=>console.error(err));
+
+  // const {rows4} = await client.query('INSERT INTO seasons(websiteURL, season) \
+  // VALUES(' + req.param.websiteURL + req.param.season + ')').catch((err)=>console.error(err));
+  
+  // const message = { text: "should've inserted " + req.param.name + req.param.type + req.param.gender + req.param.price + req.param.websiteURL +
+  //  req.param.brand_name + req.param.imageURL + req.param.color + req.param.season };
+  // res.json(message);
+  client.end();
+});
+
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))

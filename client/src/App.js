@@ -26,16 +26,27 @@ fetchRandom = async()=>{
     </div>
   });
 }
-handleSubmitInsert(event) {
+
+async handleSubmitInsert(event) {
     event.preventDefault();
     const insertInputs =event.target.getElementsByClassName("insert");
-    console.log("name:"+insertInputs.name.value);
-    console.log("type:"+insertInputs.type.value);
-    console.log("gender:"+insertInputs.gender.value);
-    console.log("price:"+insertInputs.price.value);
-    console.log("WebsiteURL:"+insertInputs.websiteURL.value);
-    console.log("BrandName:"+insertInputs.BrandName.value);
+    let name = insertInputs.name.value, type = insertInputs.type.value, gender = insertInputs.gender.value, price = insertInputs.price.value,
+    websiteURL = insertInputs.websiteURL.value, brand_name = insertInputs.BrandName.value, imageURL = insertInputs.imageURL.value,
+    color = insertInputs.color.value, season = insertInputs.season.value;
+    console.log("name:"+name);
+    console.log("type:"+type);
+    console.log("gender:"+gender);
+    console.log("price:"+price);
+    console.log("WebsiteURL:"+websiteURL);
+    console.log("BrandName:"+brand_name);
     //insert query here
+    
+    // const response = await fetch('/api/insert/:name/:type/:gender/:price/:websiteURL/:brand_name/:imageURL/:color/:season');
+    // const response = await fetch('/api/insert/'+name+'/'+type+'/'+gender+'/'+price+'/'+websiteURL+'/'+brand_name+'/'+imageURL+'/'+color+'/'+season);
+    const response = await fetch('/api/insert')
+    const resJSON = await response.json();
+    this.setState({text:resJSON.text});
+
     document.getElementById("insertForm").reset();
 }
 handleSubmitSearch(event) {
@@ -64,6 +75,23 @@ render() {
             </Form.Group>
           </Form.Row>
           <Form.Row>
+            <Form.Group as={Col} controlId="formGridInsColor">
+              <Form.Label>Color:</Form.Label>
+              <Form.Control className="insert" type="text" name="color" required/>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group as={Col} controlId="formGridInsSeason">
+              <Form.Label>Season:</Form.Label>
+              <Form.Control as="select" defaultValue="Male" className="insert" name="season" required>
+                <option>Fall</option>
+                <option>Winter</option>
+                <option>Summer</option>
+                <option>Spring</option>
+              </Form.Control>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
             <Form.Group as={Col} controlId="formGridInsType">
               <Form.Label>Type:</Form.Label>
               <Form.Control className="insert" type="text" name="type" required/>
@@ -81,13 +109,21 @@ render() {
           <Form.Row>
             <Form.Group as={Col} controlId="formGridInsPrice">
               <Form.Label>Price:</Form.Label>
-              <Form.Control className="insert" type="number" step="0.01" name="type" required/>
+              <Form.Control className="insert" type="number" step="0.01" name="price" required/>
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} controlId="formGridInsURL">
               <Form.Label>Website URL:</Form.Label>
               <Form.Control type="url" className="insert" name="websiteURL" placeholder="https://example.com"
+                      pattern="https://.*"
+                      required/>
+            </Form.Group>
+          </Form.Row>
+          <Form.Row>
+            <Form.Group as={Col} controlId="formGridInsImageURL">
+              <Form.Label>Image URL:</Form.Label>
+              <Form.Control type="url" className="insert" name="imageURL" placeholder="https://example.com"
                       pattern="https://.*"
                       required/>
             </Form.Group>
