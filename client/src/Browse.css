@@ -1,13 +1,21 @@
 #allCards{
   width:100%;
+  margin-left: 2rem;
 }
 .card{
-  margin:1%;
+  margin:.25%;
   display:inline-block;
-  float:left;
+  float:right;
   min-height:50rem;
+
 }
 img{
   max-width: 100%;
   height:auto;
+}
+#filterClothes{
+  float:left;
+  position: fixed;
+  width:17rem;
+  margin-left: -2.5%;
 }
