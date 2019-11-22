@@ -18,7 +18,10 @@ h3 {
   border: 0;
 }
 a{
-  color: hotpink;
+  color: #007bff;
+  word-break: break-all;
+  white-space:normal;
+  font-size: 0.9em;
 }
 button {
   font-size: 1em;

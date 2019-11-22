@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import {Form,Col,Button,Table} from 'react-bootstrap';
+import {Form,Col,Button,Table,Card} from 'react-bootstrap';
 import './Home.css'
 class Home extends Component{
   constructor(props){
     super(props);
     this.state = {
       text: '',
-      search:[]
+      search:[],
+      all:[]
     }
     this.showSearchResults=this.showSearchResults.bind(this);
   }
