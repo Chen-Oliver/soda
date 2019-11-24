@@ -126,6 +126,20 @@ app.get('/api/getAll/', cors(), async (req, res, next) => {
     res.send(rows);
     client.end();
 });
+//get all pieces of clothing from database
+app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+        ssl: true,
+    });
+    let types = req.params.types;
+    let q = 'SELECT DISTINCT * FROM clothing NATURAL JOIN colors NATURAL JOIN brands';
+    if(types!='')q+=' WHERE '+types;
+    client.connect();
+    const {rows} = await client.query(q).catch((err)=>console.error(err));
+    res.send(rows);
+    client.end();
+});
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))

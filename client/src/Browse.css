@@ -13,9 +13,9 @@ img{
   max-width: 100%;
   height:auto;
 }
-#filterClothes{
+.filter{
   float:left;
   position: fixed;
-  width:17rem;
+  width:17%;
   margin-left: -2.5%;
 }

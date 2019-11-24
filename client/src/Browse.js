@@ -1,11 +1,41 @@
 import React, { Component } from 'react'
 import {Form,Col,Button,Table,Card} from 'react-bootstrap';
-import './Browse.css'
+import './Browse.css';
+import Select from 'react-select';
+
+const typeOptions = [
+  { value: "Coat", label: 'Coat' },
+  { value: "Jacket", label: 'Jacket' },
+  { value: "Pants", label: 'Pants' },
+  { value: "Shirt", label: 'Shirt' },
+  { value: "Shoes", label: 'Shoes' },
+  { value: "Sweater", label: 'Sweater' }
+]
+const colorOptions = [
+  { value: "Blue", label: 'Blue' },
+  { value: "Beige", label: 'Beige' },
+  { value: "Black", label: 'Black' },
+  { value: "Gray", label: 'Gray' },
+  { value: "White", label: 'White' },
+  { value: "Burgundy", label: 'Burgundy' },
+  { value: "Purple", label: 'Purple' },
+  { value: "Pink", label: 'Pink' },
+  { value: "Green", label: 'Green' },
+  { value: "Brown", label: 'Brown' },
+  { value: "Orange", label: 'Orange' },
+  { value: "Yellow", label: 'Yellow' }
+]
+var allClothes;
 class Browse extends Component{
   constructor(props){
     super(props);
     this.state = {
-      all:["Loading..."]
+      all:["Loading"],
+      filter:{
+        //default filters show all clothes
+        "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
+        "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow"] //selected filters for actual color
+      }
     }
     this.showAll=this.showAll.bind(this);
   }
@@ -16,60 +46,89 @@ class Browse extends Component{
     const response = await fetch('/api/getAll/');
     const resJSON = await response.json();
     this.setState({all:resJSON});
-    console.log(resJSON);
+    allClothes=resJSON;
   }
-  handleFilter=async()=>{
-
+  applyFilters=()=>{
+    let filters = Object.keys(this.state.filter);
+    var clothes=allClothes;
+    for(let filterType of filters){//what type of filter: type,color,...
+      var bool=false;
+      clothes = clothes.filter((c)=>{
+        bool=false;
+        this.state.filter[filterType].map((option)=>{
+          bool=bool||(c[filterType]===option);
+        })
+        return bool;
+      })
+    }
+    if(clothes.length==0){
+      this.setState({all:["None"]});
+    }
+    else this.setState({all:clothes});
+  }
+  //update selected type filters state
+  typeChanged=(options)=>{
+    if(options===null || options.length===typeOptions.length || options.length===0){
+      options=typeOptions;
+    }
+    var selected = [];
+    options.map((curSelected)=>{
+      selected.push(curSelected.value);
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      type:selected
+      }
+    },this.applyFilters);
+  }
+  //update selected actual colors filters state
+  colorChanged=(options)=>{
+    if(options===null || options.length===typeOptions.length || options.length===0){
+      options=colorOptions;
+    }
+    var selected = [];
+    options.map((curSelected)=>{
+      selected.push(curSelected.value);
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      actual:selected
+      }
+    },this.applyFilters);
   }
   showAll(){
-    if(this.state.all[0]!=="Loading..."){
+    if(this.state.all[0]==="Loading"){
+      return(
+        <h1>Loading...</h1>
+      )
+    }
+    else{
       return(
         <div id="allCards">
-        <Form id="filterClothes" onSubmit={this.handleFilter}>
-           <Form.Row>
-             <Form.Group as={Col} controlId="filterClothesType">
-               <Form.Label>Type:</Form.Label>
-               <Form.Control as="select" defaultValue="All" className="filter" name="season" required>
-                 <option>All</option>
-                 <option>Coat</option>
-                 <option>Jacket</option>
-                 <option>Pants</option>
-                 <option>Shirt</option>
-                 <option>Shoes</option>
-                 <option>Sweater</option>
-               </Form.Control>
-             </Form.Group>
-           </Form.Row>
-           <Form.Row>
-             <Form.Group as={Col} controlId="formGridDelWebsiteURL">
-               <Form.Label>Colors</Form.Label>
-               <Form.Control type="text"/>
-             </Form.Group>
-           </Form.Row>
-           <Form.Row>
-             <Form.Group as={Col} controlId="formGridDelWebsiteURL">
-               <Form.Label>Price</Form.Label>
-               <Form.Control type="text"/>
-             </Form.Group>
-           </Form.Row>
-           <Form.Row>
-             <Form.Group as={Col} controlId="formGridDelWebsiteURL">
-               <Form.Label>Season</Form.Label>
-               <Form.Control type="text"/>
-             </Form.Group>
-           </Form.Row>
-           <Form.Row>
-             <Form.Group as={Col} controlId="formGridDelWebsiteURL">
-               <Form.Label>Brand</Form.Label>
-               <Form.Control type="text"/>
-             </Form.Group>
-           </Form.Row>
-           <Button variant="primary" type="submit">
-               Filter
-           </Button>
-         </Form>
-        {this.state.all.map((result)=>
-        <Card style={{ width: '23rem',height:'100%'}}>
+        <div className="filter">
+        <div>
+          <strong>Clothing Types</strong>
+          <Select
+          options={typeOptions}
+          isMulti
+          onChange={this.typeChanged}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        <div>
+          <strong>Colors</strong>
+          <Select
+          options={colorOptions}
+          isMulti
+          onChange={this.colorChanged}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        </div>
+        {this.state.all.map((result)=>{
+        if(result==="None")return <h1 style={{textAlign:"center"}}>No Results Found</h1>
+        else{
+        return <Card style={{ width: '23rem',height:'100%'}}>
         <a target="_blank" rel="noopener noreferrer" href={result.websiteurl}><Card.Img variant="top" src={result.imageurl} /></a>
         <Card.Body>
           <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a></Card.Title>
@@ -81,15 +140,12 @@ class Browse extends Component{
           {result.gender+"\n"}
           </Card.Text>
         </Card.Body>
-        </Card>
-        )}
+        </Card>}
+      })}
         </div>
       )
-    }
-    return(
-      <h1>Loading...</h1>
-    )
   }
+}
   render(){
     return (
       <div className="App">
