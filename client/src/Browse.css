@@ -1,21 +1,20 @@
 #allCards{
   width:100%;
-  margin-left: 2rem;
+  margin-left: 16.5rem;
 }
 .card{
   margin:.25%;
   display:inline-block;
-  float:right;
+  float:left;
   min-height:50rem;
-
 }
 img{
   max-width: 100%;
   height:auto;
 }
 .filter{
-  float:left;
+  float:right;
   position: fixed;
   width:17%;
-  margin-left: -2.5%;
+  margin-left:-1.5%
 }

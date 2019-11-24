@@ -26,6 +26,14 @@ const colorOptions = [
   { value: "Burgundy", label: 'Burgundy' },
   { value: "Brown", label: 'Brown' }
 ]
+const priceOptions=[
+  { value: "0-25", label: "$25 or lower" },
+  { value: "25-50", label: '$25-$50' },
+  { value: "50-100", label: '$50-$100' },
+  { value: "100-150", label: '$100-$150' },
+  { value: "150-250", label: '$150-250' },
+  { value: "250-10000", label: '$250 and higher' }
+]
 var allClothes;
 class Browse extends Component{
   constructor(props){
@@ -35,7 +43,8 @@ class Browse extends Component{
       filter:{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
-        "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"] //selected filters for actual color
+        "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
+        "price":["0-25","25-50","50-100","100-150","150-250","250-10000"]//price filters
       }
     }
     this.showAll=this.showAll.bind(this);
@@ -46,6 +55,7 @@ class Browse extends Component{
   getAll=async(event)=>{
     const response = await fetch('/api/getAll/');
     const resJSON = await response.json();
+    resJSON.sort((a,b)=>a.price-b.price);
     this.setState({all:resJSON});
     allClothes=resJSON;
   }
@@ -57,7 +67,12 @@ class Browse extends Component{
       clothes = clothes.filter((c)=>{
         bool=false;
         this.state.filter[filterType].map((option)=>{
-          bool=bool||(c[filterType]===option);
+          if(filterType!=="price")bool=bool||(c[filterType]===option);
+          else{
+            console.log(option.slice(0,option.indexOf('-')));
+            console.log(Number(option.slice(option.indexOf('-')+1)));
+            bool=bool||(c[filterType]>=Number(option.slice(0,option.indexOf('-')))&&c[filterType]<=Number(option.slice(option.indexOf('-')+1)));
+          }
         })
         return bool;
       })
@@ -65,12 +80,22 @@ class Browse extends Component{
     if(clothes.length==0){
       this.setState({all:["None"]});
     }
-    else this.setState({all:clothes});
+    else{
+      clothes.sort((a,b)=>a.price-b.price);
+      this.setState({all:clothes});
+    }
   }
-  //update selected type filters state
-  typeChanged=(options)=>{
-    if(options===null || options.length===typeOptions.length || options.length===0){
-      options=typeOptions;
+  /*
+  description:
+          handle filter change by updating filter state variable and calling
+          the applyfilter function
+  options: selected options for current filterType
+  filterType: type(clothing type),actual(actual color),price(price ranges)
+  filterOptions: all the available options for the current filterType
+  */
+  filterChange=(options,filterType,filterOptions)=>{
+    if(options===null || options.length===0){
+      options=filterOptions;
     }
     var selected = [];
     options.map((curSelected)=>{
@@ -78,22 +103,7 @@ class Browse extends Component{
     });
     this.setState({filter:{
       ...this.state.filter,
-      type:selected
-      }
-    },this.applyFilters);
-  }
-  //update selected actual colors filters state
-  colorChanged=(options)=>{
-    if(options===null || options.length===typeOptions.length || options.length===0){
-      options=colorOptions;
-    }
-    var selected = [];
-    options.map((curSelected)=>{
-      selected.push(curSelected.value);
-    });
-    this.setState({filter:{
-      ...this.state.filter,
-      actual:selected
+      [filterType]:selected
       }
     },this.applyFilters);
   }
@@ -105,14 +115,14 @@ class Browse extends Component{
     }
     else{
       return(
-        <div id="allCards">
+        <div>
         <div className="filter">
         <div>
           <strong>Clothing Types</strong>
           <Select
           options={typeOptions}
           isMulti
-          onChange={this.typeChanged}
+          onChange={event=>this.filterChange(event,"type",typeOptions)}
           closeMenuOnSelect={false}
           />
         </div>
@@ -121,11 +131,21 @@ class Browse extends Component{
           <Select
           options={colorOptions}
           isMulti
-          onChange={this.colorChanged}
+          onChange={event=>this.filterChange(event,"actual",colorOptions)}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        <div>
+          <strong>Price</strong>
+          <Select
+          options={priceOptions}
+          isMulti
+          onChange={event=>this.filterChange(event,"price",priceOptions)}
           closeMenuOnSelect={false}
           />
         </div>
         </div>
+        <div id="allCards">
         {this.state.all.map((result)=>{
         if(result==="None")return <h1 style={{textAlign:"center"}}>No Results Found</h1>
         else{
@@ -143,6 +163,7 @@ class Browse extends Component{
         </Card.Body>
         </Card>}
       })}
+        </div>
         </div>
       )
   }
