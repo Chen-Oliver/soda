@@ -12,18 +12,19 @@ const typeOptions = [
   { value: "Sweater", label: 'Sweater' }
 ]
 const colorOptions = [
+  { value: "Red", label: 'Red' },
+  { value: "Green", label: 'Green' },
   { value: "Blue", label: 'Blue' },
-  { value: "Beige", label: 'Beige' },
   { value: "Black", label: 'Black' },
-  { value: "Gray", label: 'Gray' },
   { value: "White", label: 'White' },
-  { value: "Burgundy", label: 'Burgundy' },
+  { value: "Gray", label: 'Gray' },
+  { value: "Orange", label: 'Orange' },
+  { value: "Yellow", label: 'Yellow' },
   { value: "Purple", label: 'Purple' },
   { value: "Pink", label: 'Pink' },
-  { value: "Green", label: 'Green' },
-  { value: "Brown", label: 'Brown' },
-  { value: "Orange", label: 'Orange' },
-  { value: "Yellow", label: 'Yellow' }
+  { value: "Beige", label: 'Beige' },
+  { value: "Burgundy", label: 'Burgundy' },
+  { value: "Brown", label: 'Brown' }
 ]
 var allClothes;
 class Browse extends Component{
@@ -34,7 +35,7 @@ class Browse extends Component{
       filter:{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
-        "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow"] //selected filters for actual color
+        "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"] //selected filters for actual color
       }
     }
     this.showAll=this.showAll.bind(this);
