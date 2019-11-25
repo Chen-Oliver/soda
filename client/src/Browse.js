@@ -50,7 +50,8 @@ class Browse extends Component{
         "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
         "price":["0-25","25-50","50-100","100-150","150-250","250-10000"],//price filters
         "gender":["Male","Female"]
-      }
+      },
+      favorites:{}//each time this is updated, update neo4j database as well(remove/add favorite)
     }
     this.showAll=this.showAll.bind(this);
   }
@@ -61,6 +62,13 @@ class Browse extends Component{
     const response = await fetch('/api/getAll/');
     const resJSON = await response.json();
     resJSON.sort((a,b)=>a.price-b.price);
+    let resDict={};
+    //get favorited state from neo4j and set dict here
+    for(let clothing of resJSON){
+      resDict[clothing.imageurl]=clothing;
+      // resDict[clothing.imageurl]["favorite"]=neo4j return val for current clothing;
+    }
+    this.setState({favorites:resDict});
     this.setState({all:resJSON});
     allClothes=resJSON;
   }

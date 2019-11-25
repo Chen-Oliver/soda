@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Form,Row,Col,Button,Table,Card} from 'react-bootstrap';
+import {Form,Row,Col,Button,Table,Card,Tabs,Tab} from 'react-bootstrap';
 import './Home.css'
 class Home extends Component{
   constructor(props){
@@ -7,7 +7,8 @@ class Home extends Component{
     this.state = {
       text: '',
       search:[],
-      all:[]
+      all:[],
+      loginState:""
     }
     this.showSearchResults=this.showSearchResults.bind(this);
   }
@@ -108,41 +109,90 @@ handleUpdate=async(event)=>{
   const resJSON = await response.json();
   console.log("update response received:"+resJSON+"\n");
 }
+handleLogin=async(event)=>{
+  event.preventDefault();
+  const loginInputs =event.target.getElementsByClassName("login");
+  let username = loginInputs.loginUsername.value;
+  let password = loginInputs.loginPassword.value;
+  //call backend login here, check success
+  let res = true;
+  if(res){
+    this.props.loginSuccess(username);
+  }
+  else{
+    this.setState({loginState:"Login Failed. Try Again."});
+  }
+}
+handleSignup=async(event)=>{
+  event.preventDefault();
+  const signupInputs =event.target.getElementsByClassName("signup");
+  let username = signupInputs.signupUsername.value;
+  let password = signupInputs.signupPassword.value;
+  //send signup info to backend, check success
+  let res = true;
+  if(res){
+    this.props.loginSuccess(username);
+  }
+  else{
+    this.setState({loginState:"Signup Failed. User already exists."});
+  }
+}
   render(){
     return(
       <div className="App">
       <div className="jumbotron d-flex align-items-center">
         <div className="container">
-          <h1 id="intro">{this.state.text}</h1>
-          <Row>
-          <Form id="loginForm" onSubmit={this.handleLogin}>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridSearchBrand">
-                <Form.Label>Username:</Form.Label>
-                <Form.Control className="search" type="text" name="loginUsername" required/>
-              </Form.Group>
-            </Form.Row>
-            <Form.Row>
-              <Form.Group as={Col} controlId="formGridSearchSeason">
-              <Form.Label>Password:</Form.Label>
-              <Form.Control type="password" className="login" name="loginPasswordd" required/>
-              </Form.Group>
-            </Form.Row>
-            <Row>
-            <Col>
-            <Button variant="primary" type="submit">
-              Login
-            </Button>
-            </Col>
-            <Col>
-            <Button variant="primary" type="submit">
-              Sign Up
-            </Button>
-            </Col>
-            </Row>
-            <p><strong>Warning:</strong> Don't use your real password</p>
-          </Form>
-          </Row>
+          <h1 id="intro">{"Hello "+this.props.curUser+"! Welcome to the SODA App"}</h1>
+          {!this.props.loggedIn?<Tabs defaultActiveKey="loginTab" id="login-signup-tabs">
+            <Tab eventKey="loginTab" title="Login">
+              <Form id="loginForm" onSubmit={this.handleLogin}>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridLoginUsername">
+                    <Form.Label>Username:</Form.Label>
+                    <Form.Control className="login" type="text" name="loginUsername" required/>
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridLoginPassword">
+                  <Form.Label>Password:</Form.Label>
+                  <Form.Control type="password" className="login" name="loginPassword" required/>
+                  </Form.Group>
+                </Form.Row>
+                <Row>
+                <Col>
+                <Button variant="primary" name="loginSubmit" type="submit">
+                  Login
+                </Button>
+                </Col>
+                </Row>
+                <h5>{this.state.loginState}</h5>
+              </Form>
+            </Tab>
+            <Tab eventKey="signupTab" title="Signup">
+              <Form id="loginForm" onSubmit={this.handleSignup}>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridSignupUsername">
+                    <Form.Label>Username:</Form.Label>
+                    <Form.Control className="signup" type="text" name="signupUsername" required/>
+                  </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                  <Form.Group as={Col} controlId="formGridSignupPassword">
+                  <Form.Label>Password:</Form.Label>
+                  <Form.Control type="password" className="signup" name="signupPassword" required/>
+                  </Form.Group>
+                </Form.Row>
+                <Row>
+                <Col>
+                <Button variant="primary" name="signupSubmit" type="submit">
+                  Sign Up
+                </Button>
+                </Col>
+                </Row>
+                <h5>{this.state.loginState}</h5>
+              </Form>
+            </Tab>
+          </Tabs>:<br/>}
         </div>
       </div>
       <h4>Brought to you by Team Goodbois: Oliver Chen, Darren Anco, Allen Chen, Steven Lee</h4>

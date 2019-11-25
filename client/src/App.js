@@ -12,8 +12,14 @@ class App extends Component {
   constructor(props){
     super(props);
     this.state = {
-      loggedIn:false
+      loggedIn:false,
+      curUser:"World"
     }
+    this.loginSuccess=this.loginSuccess.bind(this);
+  }
+  loginSuccess(username){
+    this.setState({loggedIn:true});
+    this.setState({curUser:username});
   }
   render() {
       return (
@@ -27,9 +33,10 @@ class App extends Component {
             <Link to="/random">Random</Link>
             <Link to="/about">About</Link>
           </Nav>
+          {this.state.curUser}
          </Navbar>
          <Switch>
-           <Route exact path='/' component={Home}></Route>
+           <Route exact path='/' render={(props) => (<Home {...props} loggedIn={true} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/browse' component={Browse}></Route>
            <Route exact path='/random' component={Random}></Route>
            <Route exact path='/about' component={About}></Route>
@@ -42,7 +49,7 @@ class App extends Component {
           </Nav>
          </Navbar>
          <Switch>
-           <Route exact path='/' component={Home}></Route>
+           <Route exact path='/' render={(props) => (<Home {...props} loginSuccess={this.loginSuccess}  loggedIn={this.state.loggedIn} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/about' component={About}></Route>
            <Route component={NotFound}></Route>
          </Switch></div>}

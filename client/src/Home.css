@@ -1,8 +1,13 @@
-button{
-  width:100%;
-}
 #loginForm{
   background-color: white;
   margin-left:23vw;
   border:3px solid black;
+}
+.nav-tabs{
+  width:25%;
+  margin-left: 23vw;
+}
+.nav-item{
+  margin:0;
+  background-color: #d2d5d9;
 }
