@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Form,Row,Col,Button,Table,Card,Tabs,Tab} from 'react-bootstrap';
 import './Home.css'
+
 class Home extends Component{
   constructor(props){
     super(props);

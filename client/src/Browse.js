@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import {Form,Col,Button,Table,Card} from 'react-bootstrap';
 import './Browse.css';
 import Select from 'react-select';
-
+import { MdFavorite, MdFavoriteBorder} from 'react-icons/md';
 const typeOptions = [
   { value: "Coat", label: 'Coat' },
   { value: "Jacket", label: 'Jacket' },
@@ -66,7 +66,7 @@ class Browse extends Component{
     //get favorited state from neo4j and set dict here
     for(let clothing of resJSON){
       resDict[clothing.imageurl]=clothing;
-      // resDict[clothing.imageurl]["favorite"]=neo4j return val for current clothing;
+      resDict[clothing.imageurl].favorite=false;        //neo4j return val for current clothing;
     }
     this.setState({favorites:resDict});
     this.setState({all:resJSON});
@@ -120,6 +120,13 @@ class Browse extends Component{
       }
     },this.applyFilters);
   }
+  handleFav=async(event,imageurl)=>{
+    //add/remove fav in neo4j database here...
+    let temp = this.state.favorites;
+    temp[imageurl].favorite=!temp[imageurl].favorite
+    this.setState({favorites:temp});
+  }
+
   showAll(){
     if(this.state.all[0]==="Loading"){
       return(
@@ -174,13 +181,20 @@ class Browse extends Component{
         return <Card style={{ width: '23rem',height:'100%'}}>
         <a target="_blank" rel="noopener noreferrer" href={result.websiteurl}><Card.Img variant="top" src={result.imageurl} /></a>
         <Card.Body>
-          <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a></Card.Title>
+          <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a>
+            {this.state.favorites[result.imageurl].favorite?<div onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'pink'}}>
+              <MdFavorite size={20}/>
+            </div>:<div onClick={event=>this.handleFav(event,result.imageurl)}>
+              <MdFavoriteBorder size={20}/>
+            </div>}
+          </Card.Title>
           <Card.Text>
           <strong>{"$" + result.price+"\n"}</strong>
           {"Color: "+result.color+"\n"}
           {"Sold by: "+result.brandname+"\n"}
           {result.type+"\n"}
           {result.gender+"\n"}
+          {"favorite:"+this.state.favorites[result.imageurl].favorite}
           </Card.Text>
         </Card.Body>
         </Card>}
