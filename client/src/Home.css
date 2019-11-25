@@ -1,0 +1,8 @@
+button{
+  width:100%;
+}
+#loginForm{
+  background-color: white;
+  margin-left:23vw;
+  border:3px solid black;
+}

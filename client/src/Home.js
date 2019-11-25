@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Form,Col,Button,Table,Card} from 'react-bootstrap';
+import {Form,Row,Col,Button,Table,Card} from 'react-bootstrap';
 import './Home.css'
 class Home extends Component{
   constructor(props){
@@ -113,9 +113,40 @@ handleUpdate=async(event)=>{
       <div className="App">
       <div className="jumbotron d-flex align-items-center">
         <div className="container">
-          <h1>{this.state.text}</h1>
+          <h1 id="intro">{this.state.text}</h1>
+          <Row>
+          <Form id="loginForm" onSubmit={this.handleLogin}>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridSearchBrand">
+                <Form.Label>Username:</Form.Label>
+                <Form.Control className="search" type="text" name="loginUsername" required/>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridSearchSeason">
+              <Form.Label>Password:</Form.Label>
+              <Form.Control type="password" className="login" name="loginPasswordd" required/>
+              </Form.Group>
+            </Form.Row>
+            <Row>
+            <Col>
+            <Button variant="primary" type="submit">
+              Login
+            </Button>
+            </Col>
+            <Col>
+            <Button variant="primary" type="submit">
+              Sign Up
+            </Button>
+            </Col>
+            </Row>
+            <p><strong>Warning:</strong> Don't use your real password</p>
+          </Form>
+          </Row>
         </div>
       </div>
+      <h4>Brought to you by Team Goodbois: Oliver Chen, Darren Anco, Allen Chen, Steven Lee</h4>
+      {/*
       <Form id="insertForm" onSubmit={this.handleSubmitInsert}>
         <Form.Row>
           <Form.Group as={Col} controlId="formGridInsName">
@@ -241,6 +272,7 @@ handleUpdate=async(event)=>{
              Delete Clothing
          </Button>
        </Form>
+       */}
       </div>
 
     )

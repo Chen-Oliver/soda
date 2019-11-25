@@ -34,6 +34,10 @@ const priceOptions=[
   { value: "150-250", label: '$150-250' },
   { value: "250-10000", label: '$250 and higher' }
 ]
+const genderOptions=[
+  { value:"Male",label:"Male" },
+  { value:"Female",label:"Female" }
+]
 var allClothes;
 class Browse extends Component{
   constructor(props){
@@ -44,7 +48,8 @@ class Browse extends Component{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
         "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
-        "price":["0-25","25-50","50-100","100-150","150-250","250-10000"]//price filters
+        "price":["0-25","25-50","50-100","100-150","150-250","250-10000"],//price filters
+        "gender":["Male","Female"]
       }
     }
     this.showAll=this.showAll.bind(this);
@@ -141,6 +146,15 @@ class Browse extends Component{
           options={priceOptions}
           isMulti
           onChange={event=>this.filterChange(event,"price",priceOptions)}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        <div>
+          <strong>Gender</strong>
+          <Select
+          options={genderOptions}
+          isMulti
+          onChange={event=>this.filterChange(event,"gender",genderOptions)}
           closeMenuOnSelect={false}
           />
         </div>
