@@ -4,13 +4,110 @@ const cors = require('cors');
 const app = express();
 const { Client } = require('pg');
 const path = require('path');
+const neo4j = require('neo4j-driver').v1;
+const bcrypt = require('bcryptjs');
 
+var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
+var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
+
+var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
   console.log('unhandledRejection', error.message);
 });
 
+app.get('/api/addFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH (u:User {username:{userParam}}) CREATE (c:Clothing {imageurl:{imageParam}}) CREATE (u)-[:Favorite]->(c)",{
+userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+});
+
+app.get('/api/removeFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH (u:User {username:{userParam}})-[f:Favorite]-(c:Clothing{imageurl:{imageParam}}) Delete f",{
+userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+});
+
+app.get('/api/getFavorites/:username',cors(),async(req,res,next)=> {
+  var session = driver.session();
+session
+  .run("MATCH (User {username:{userParam}})-[:Favorite]->(clothing) RETURN clothing.imageurl",{
+userParam:req.params.username})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+});
+app.get('/api/signup/:username/:password',cors(),async(req,res,next)=> {
+  bcrypt.hash(req.params.password, 10, function(err, hash) {
+    var session = driver.session();
+  session
+      .run("Merge (n:User {username:{userParam}}) ON CREATE SET n.password={passwordParam},n.found=0 ON MATCH SET n.found=1 RETURN n.username,n.found",{
+    userParam:req.params.username,passwordParam:hash})
+      .then(function(result) {
+          if(result.records[0]._fields[1]["low"]){
+            res.json("Username already exists");
+            session.close();
+          }
+          else{
+            res.send(true);
+            session.close();
+          }
+      })
+      .catch(function(error) {
+          res.send(false);
+          console.log(error);
+      });
+  });
+});
+app.get('/api/login/:username/:password',cors(),async(req,res,next)=> {
+    var session = driver.session();
+  session
+      .run("MATCH (user:User {username:{userParam}}) RETURN user.password",{
+    userParam:req.params.username})
+      .then(function(result) {
+          if(result.records.length===0){
+            res.json("No such user");
+            session.close();
+          }
+          bcrypt.compare(req.params.password, result.records[0]._fields[0], function(err, pRes) {
+            if(pRes) {
+              // password match
+              res.send(true);
+              session.close();
+            } else {
+             // password doesn't match
+             res.send(false);
+             session.close();
+            }
+          });
+      })
+      .catch(function(error) {
+          res.send(false);
+          console.log(error);
+      });
+  });
 // Serve our base route that returns a Hello World greeting
 app.get('/api/greet/', cors(), async (req, res, next) => {
   try {
@@ -20,6 +117,18 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
     next(err)
   }
 })
+
+app.get('/api/similar/:price/:color/:type/:gender', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT DISTINCT * FROM clothing NATURAL JOIN colors NATURAL JOIN brands WHERE type='+"\'"+req.params.type +"\'"+ "AND gender="+"\'"+req.params.gender+"\'"+"AND( actual="+"\'"+req.params.color +"\'"+"OR ABS(price - "+"\'"+req.params.price+"\'"+") <= 10) ORDER BY price DESC").catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
+
 app.get('/api/delete/:websiteURL/', cors(), async (req, res, next) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,

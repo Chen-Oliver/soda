@@ -44,6 +44,10 @@ class Browse extends Component{
     super(props);
     this.state = {
       all:["Loading"],
+      typeOption:null,
+      actualOption:null,
+      priceOption:null,
+      genderOption:null,
       filter:{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
@@ -54,6 +58,7 @@ class Browse extends Component{
       favorites:{}//each time this is updated, update neo4j database as well(remove/add favorite)
     }
     this.showAll=this.showAll.bind(this);
+    this.clearFilters=this.clearFilters.bind(this);
   }
   componentDidMount() {
       this.getAll();
@@ -67,6 +72,11 @@ class Browse extends Component{
     for(let clothing of resJSON){
       resDict[clothing.imageurl]=clothing;
       resDict[clothing.imageurl].favorite=false;        //neo4j return val for current clothing;
+    }
+    const response2 = await fetch('/api/getFavorites/'+this.props.curUser);
+    const resJSON2 = await response2.json();
+    for(let record of resJSON2.records){
+      resDict[record._fields[0]].favorite=true; //set imageurl fav to be true
     }
     this.setState({favorites:resDict});
     this.setState({all:resJSON});
@@ -82,8 +92,6 @@ class Browse extends Component{
         this.state.filter[filterType].map((option)=>{
           if(filterType!=="price")bool=bool||(c[filterType]===option);
           else{
-            console.log(option.slice(0,option.indexOf('-')));
-            console.log(Number(option.slice(option.indexOf('-')+1)));
             bool=bool||(c[filterType]>=Number(option.slice(0,option.indexOf('-')))&&c[filterType]<=Number(option.slice(option.indexOf('-')+1)));
           }
         })
@@ -106,7 +114,8 @@ class Browse extends Component{
   filterType: type(clothing type),actual(actual color),price(price ranges)
   filterOptions: all the available options for the current filterType
   */
-  filterChange=(options,filterType,filterOptions)=>{
+  filterChange=(options,filterType,filterOptions,valueState)=>{
+    this.setState({[valueState]:options});
     if(options===null || options.length===0){
       options=filterOptions;
     }
@@ -125,8 +134,24 @@ class Browse extends Component{
     let temp = this.state.favorites;
     temp[imageurl].favorite=!temp[imageurl].favorite
     this.setState({favorites:temp});
+    if(temp[imageurl].favorite){//add favorite relation to database
+      const response = await fetch('/api/addFavorite/'+this.props.curUser+"/"+encodeURIComponent(imageurl));
+      const resJSON = await response.json();
+    }
+    else{ //remove favorite from database
+      const response = await fetch('/api/removeFavorite/'+this.props.curUser+"/"+encodeURIComponent(imageurl));
+      const resJSON = await response.json();
+    }
   }
-
+  similarItems=async(event,price,color,type,gender)=>{
+    event.preventDefault();
+    const response = await fetch('/api/similar/'+price+"/"+color+"/"+type+"/"+gender);
+    const resJSON = await response.json();
+    this.setState({all:resJSON});
+  }
+  clearFilters(){
+    this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,all:allClothes,filter:{}});
+  }
   showAll(){
     if(this.state.all[0]==="Loading"){
       return(
@@ -140,39 +165,44 @@ class Browse extends Component{
         <div>
           <strong>Clothing Types</strong>
           <Select
+          value={this.state.typeOption}
           options={typeOptions}
           isMulti
-          onChange={event=>this.filterChange(event,"type",typeOptions)}
+          onChange={event=>this.filterChange(event,"type",typeOptions,"typeOption")}
           closeMenuOnSelect={false}
           />
         </div>
         <div>
           <strong>Colors</strong>
           <Select
+          value={this.state.actualOption}
           options={colorOptions}
           isMulti
-          onChange={event=>this.filterChange(event,"actual",colorOptions)}
+          onChange={event=>this.filterChange(event,"actual",colorOptions,"actualOption")}
           closeMenuOnSelect={false}
           />
         </div>
         <div>
           <strong>Price</strong>
           <Select
+          value={this.state.priceOption}
           options={priceOptions}
           isMulti
-          onChange={event=>this.filterChange(event,"price",priceOptions)}
+          onChange={event=>this.filterChange(event,"price",priceOptions,"priceOption")}
           closeMenuOnSelect={false}
           />
         </div>
         <div>
           <strong>Gender</strong>
           <Select
+          value={this.state.genderOption}
           options={genderOptions}
           isMulti
-          onChange={event=>this.filterChange(event,"gender",genderOptions)}
+          onChange={event=>this.filterChange(event,"gender",genderOptions,"genderOption")}
           closeMenuOnSelect={false}
           />
         </div>
+        <Button onClick={this.clearFilters}>Reset Filters</Button>
         </div>
         <div id="allCards">
         {this.state.all.map((result)=>{
@@ -182,10 +212,10 @@ class Browse extends Component{
         <a target="_blank" rel="noopener noreferrer" href={result.websiteurl}><Card.Img variant="top" src={result.imageurl} /></a>
         <Card.Body>
           <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a>
-            {this.state.favorites[result.imageurl].favorite?<div onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'pink'}}>
-              <MdFavorite size={20}/>
-            </div>:<div onClick={event=>this.handleFav(event,result.imageurl)}>
-              <MdFavoriteBorder size={20}/>
+            {this.state.favorites[result.imageurl].favorite?<div><span onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'pink'}}>
+              <MdFavorite size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>
+            </div>:<div><span onClick={event=>this.handleFav(event,result.imageurl)}>
+              <MdFavoriteBorder size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>
             </div>}
           </Card.Title>
           <Card.Text>
@@ -194,7 +224,7 @@ class Browse extends Component{
           {"Sold by: "+result.brandname+"\n"}
           {result.type+"\n"}
           {result.gender+"\n"}
-          {"favorite:"+this.state.favorites[result.imageurl].favorite}
+          {/* "favorite:"+this.state.favorites[result.imageurl].favorite */}
           </Card.Text>
         </Card.Body>
         </Card>}

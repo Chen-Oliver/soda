@@ -9,7 +9,8 @@ class Home extends Component{
       text: '',
       search:[],
       all:[],
-      loginState:""
+      loginState:"",
+      signupState:""
     }
     this.showSearchResults=this.showSearchResults.bind(this);
   }
@@ -116,8 +117,12 @@ handleLogin=async(event)=>{
   let username = loginInputs.loginUsername.value;
   let password = loginInputs.loginPassword.value;
   //call backend login here, check success
-  let res = true;
-  if(res){
+  const response = await fetch('/api/login/'+username+"/"+password);
+  const resJSON = await response.json();
+  if(resJSON==="No such user"){
+    this.setState({loginState:resJSON});
+  }
+  else if(resJSON){
     this.props.loginSuccess(username);
   }
   else{
@@ -130,12 +135,16 @@ handleSignup=async(event)=>{
   let username = signupInputs.signupUsername.value;
   let password = signupInputs.signupPassword.value;
   //send signup info to backend, check success
-  let res = true;
-  if(res){
+  const response = await fetch('/api/signup/'+username+"/"+password);
+  const resJSON = await response.json();
+  if(resJSON==="Username already exists"){
+    this.setState({signupState:"Signup Failed. User already exists."});
+  }
+  else if(resJSON){
     this.props.loginSuccess(username);
   }
   else{
-    this.setState({loginState:"Signup Failed. User already exists."});
+    this.setState({signupState:"An error occurred. Try again"});
   }
 }
   render(){
@@ -150,13 +159,13 @@ handleSignup=async(event)=>{
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridLoginUsername">
                     <Form.Label>Username:</Form.Label>
-                    <Form.Control className="login" type="text" name="loginUsername" required/>
+                    <Form.Control autocomplete="on" className="login" type="text" name="loginUsername" required/>
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridLoginPassword">
                   <Form.Label>Password:</Form.Label>
-                  <Form.Control type="password" className="login" name="loginPassword" required/>
+                  <Form.Control autocomplete="on" type="password" className="login" name="loginPassword" required/>
                   </Form.Group>
                 </Form.Row>
                 <Row>
@@ -170,17 +179,17 @@ handleSignup=async(event)=>{
               </Form>
             </Tab>
             <Tab eventKey="signupTab" title="Signup">
-              <Form id="loginForm" onSubmit={this.handleSignup}>
+              <Form id="signupForm" onSubmit={this.handleSignup}>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridSignupUsername">
                     <Form.Label>Username:</Form.Label>
-                    <Form.Control className="signup" type="text" name="signupUsername" required/>
+                    <Form.Control autocomplete="on" className="signup" type="text" name="signupUsername" required/>
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridSignupPassword">
                   <Form.Label>Password:</Form.Label>
-                  <Form.Control type="password" className="signup" name="signupPassword" required/>
+                  <Form.Control autocomplete="on" type="password" className="signup" name="signupPassword" required/>
                   </Form.Group>
                 </Form.Row>
                 <Row>
@@ -190,7 +199,7 @@ handleSignup=async(event)=>{
                 </Button>
                 </Col>
                 </Row>
-                <h5>{this.state.loginState}</h5>
+                <h5>{this.state.signupState}</h5>
               </Form>
             </Tab>
           </Tabs>:<br/>}
