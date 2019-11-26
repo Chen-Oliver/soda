@@ -14,8 +14,7 @@ class About extends Component{
     }
   }
   componentDidMount() {
-    var HOST = location.origin.replace(/^http/, 'ws')
-    socket = socketIOClient(HOST);
+    socket = socketIOClient("https://soda-uiuc.herokuapp.com",{secure: true});
     socket.on('about',(data)=>{
       this.setState({msg:data});
     })
