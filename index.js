@@ -6,12 +6,31 @@ const { Client } = require('pg');
 const path = require('path');
 const neo4j = require('neo4j-driver').v1;
 const bcrypt = require('bcryptjs');
+const http = require("http");
+const socketIO = require("socket.io");
+
+const PORT = process.env.PORT || 5000
 
 var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
 var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
 var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
 var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
+
+const server = http.createServer(app);
+const io = socketIO(server);
+io.on("connection", function(socket) {
+    console.log("New client connected");
+    socket.emit('about',{hello:"soda soda soda"});
+    socket.on("sendRequest", (data) => console.log(data.sender));
+    socket.on("acceptRequest", (data) => console.log(data.acceptedBy));
+    socket.on("disconnect", () => console.log("Client disconnected"));
+});
+server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+// // Choose the port and start the server
+// const server = app.listen(PORT, () => {
+//   console.log(`Mixing it up on port ${PORT}`)
+// })
 
 process.on('unhandledRejection', error => {
   // Will print "unhandledRejection err is not defined"
@@ -21,7 +40,7 @@ process.on('unhandledRejection', error => {
 app.get('/api/addFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
-  .run("MATCH (u:User {username:{userParam}}) CREATE (c:Clothing {imageurl:{imageParam}}) CREATE (u)-[:Favorite]->(c)",{
+  .run("MATCH (u:User {username:{userParam}}) MERGE (c:Clothing {imageurl:{imageParam}}) ON CREATE SET c.isCreated=[true] ON MATCH SET c.isCreated=[true] FOREACH(ifthen in c.isCreated | CREATE (u)-[:Favorite]->(c) REMOVE c.isCreated)",{
 userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
   .then(function(result) {
       res.send(result);
@@ -124,7 +143,7 @@ app.get('/api/similar/:price/:color/:type/:gender', cors(), async (req, res, nex
     ssl: true,
     });
     client.connect();
-  const {rows} = await client.query('SELECT DISTINCT * FROM clothing NATURAL JOIN colors NATURAL JOIN brands WHERE type='+"\'"+req.params.type +"\'"+ "AND gender="+"\'"+req.params.gender+"\'"+"AND( actual="+"\'"+req.params.color +"\'"+"OR ABS(price - "+"\'"+req.params.price+"\'"+") <= 10) ORDER BY price DESC").catch((err)=>console.error(err));
+  const {rows} = await client.query('SELECT DISTINCT * FROM clothing NATURAL JOIN colors NATURAL JOIN brands WHERE type='+"\'"+req.params.type +"\'"+ "AND gender="+"\'"+req.params.gender+"\'"+"AND( actual="+"\'"+req.params.color +"\'"+"OR ABS(price - "+"\'"+req.params.price+"\'"+") <= 10) ORDER BY price ASC").catch((err)=>console.error(err));
   res.send(rows);
   client.end();
 });
@@ -255,14 +274,4 @@ app.use(express.static(path.join(__dirname, 'client/build')))
 // Anything that doesn't match the above, send back index.html
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname + '/client/build/index.html'))
-})
-
-
-
-
-
-// Choose the port and start the server
-const PORT = process.env.PORT || 5000
-app.listen(PORT, () => {
-  console.log(`Mixing it up on port ${PORT}`)
 })
