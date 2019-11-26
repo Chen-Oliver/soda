@@ -4,6 +4,7 @@ import './About.css'
 import socketIOClient from "socket.io-client";
 
 var socket;
+const PORT = process.env.PORT || 5000;
 
 class About extends Component{
   constructor(props){
@@ -13,7 +14,7 @@ class About extends Component{
     }
   }
   componentDidMount() {
-    socket = socketIOClient("http://127.0.0.1:5000");
+    socket = socketIOClient("http://127.0.0.1:"+PORT);
     socket.on('about',(data)=>{
       this.setState({msg:data});
     })
