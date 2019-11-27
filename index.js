@@ -84,6 +84,20 @@ userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
   });
 });
 
+app.get('/api/getFriendFavorites/:username',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH(u:User{username:{userParam}})-[:Friends*1..3]-(u2:User)-[:Favorite]-(c:Clothing) WHERE u2<>u return DISTINCT u2.username,c.imageurl LIMIT 25",{
+userParam:req.params.username})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+});
+
 app.get('/api/removeFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
   var session = driver.session();
 session

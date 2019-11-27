@@ -204,7 +204,7 @@ class Browse extends Component{
         </div>
         <Button onClick={this.clearFilters}>Reset Filters</Button>
         </div>
-        <div id="allCards">
+        <div id="browseCards">
         {this.state.all.map((result)=>{
         if(result==="None")return <h1 style={{textAlign:"center"}}>No Results Found</h1>
         else{

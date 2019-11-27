@@ -1,10 +1,14 @@
-#allCardsFav{
+.allCards{
   width:100%;
-  margin-left: 16.5rem;
+  margin-left: none;
 }
 .card{
   margin:.25%;
   display:inline-block;
   float:left;
   min-height:50rem;
+}
+.nav-tabs{
+  margin-right: 100%;
+  float:left !important;
 }
