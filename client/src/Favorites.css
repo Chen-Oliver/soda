@@ -1,14 +1,18 @@
 .allCards{
   width:100%;
-  margin-left: none;
+  margin-left: 0;
 }
 .card{
   margin:.25%;
   display:inline-block;
-  float:left;
+  float:left !important;
   min-height:50rem;
 }
 .nav-tabs{
   margin-right: 100%;
   float:left !important;
+}
+
+.tab-content{
+  width:100%;
 }

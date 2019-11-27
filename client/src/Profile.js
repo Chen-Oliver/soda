@@ -85,7 +85,7 @@ class Profile extends Component{
     socket.on('requestReceived',(data)=>{
       var temp=this.state.allUsers;
       if(data.target===this.props.curUser){
-        console.log(data);
+        // console.log(data);
         temp[data.sender]="Friend Request Received";
         this.setState({allUsers:temp});
       }
@@ -93,7 +93,7 @@ class Profile extends Component{
     socket.on('acceptReceived',(data)=>{
       var temp=this.state.allUsers;
       if(data.requester===this.props.curUser){
-        console.log(data);
+        // console.log(data);
         temp[data.acceptor]="Friend";
         this.setState({allUsers:temp});
       }
