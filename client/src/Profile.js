@@ -80,8 +80,8 @@ class Profile extends Component{
   }
   componentDidMount() {
     this.getUsers();
-    // socket = socketIOClient("https://soda-uiuc.herokuapp.com",{secure: true});
-    socket=socketIOClient("http://127.0.0.1:5000");
+    socket = socketIOClient("https://soda-uiuc.herokuapp.com",{secure: true});
+    // socket=socketIOClient("http://127.0.0.1:5000");
     socket.on('requestReceived',(data)=>{
       var temp=this.state.allUsers;
       if(data.target===this.props.curUser){
