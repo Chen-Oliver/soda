@@ -36,7 +36,7 @@ class App extends Component {
             <Link to="/browse">Browse</Link>
             <Link to="/favorites">Favorites</Link>
             <Link to="/random">Random</Link>
-            <Link to="/profile">Profile</Link>
+            <Link to="/profile">Profile({this.state.curUser})</Link>
             <Link to="/about">About</Link>
           </Nav>
           </Navbar.Collapse>
