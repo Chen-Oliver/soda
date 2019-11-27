@@ -27,16 +27,19 @@ class App extends Component {
       return (
         <Router>
          <div>
-         {this.state.loggedIn?<div><Navbar bg="light" variant="light">
+         {this.state.loggedIn?<div><Navbar expand="lg" bg="light" variant="light">
           <Navbar.Brand><Link to="/">SODA</Link></Navbar.Brand>
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
             <Link to="/">Home</Link>
             <Link to="/browse">Browse</Link>
             <Link to="/favorites">Favorites</Link>
             <Link to="/random">Random</Link>
-            <Link to="/profile">Profile({this.state.curUser})</Link>
+            <Link to="/profile">Profile</Link>
             <Link to="/about">About</Link>
           </Nav>
+          </Navbar.Collapse>
          </Navbar>
          <Switch>
            <Route exact path='/' render={(props) => (<Home {...props} loginSuccess={this.loginSuccess} loggedIn={true} curUser={this.state.curUser} />)}></Route>

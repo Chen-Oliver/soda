@@ -200,7 +200,7 @@ handleSignup=async(event)=>{
           </Tabs>:<br/>}
         </div>
       </div>
-      <h4>Brought to you by Team Goodbois: Oliver Chen, Darren Anco, Allen Chen, Steven Lee</h4>
+      <h4 id="footer">Brought to you by Team Goodbois: Oliver Chen, Darren Anco, Allen Chen, Steven Lee</h4>
       {/*
       <Form id="insertForm" onSubmit={this.handleSubmitInsert}>
         <Form.Row>

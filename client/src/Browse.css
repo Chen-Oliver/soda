@@ -21,3 +21,6 @@ img{
 .similar{
   float:right;
 }
+#browse{
+  overflow-x: hidden;
+}

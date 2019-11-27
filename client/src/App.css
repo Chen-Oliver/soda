@@ -4,6 +4,7 @@
   align-items: center;
   margin: 2em;
   white-space: pre;
+  overflow-x:visible;
 }
 .App code {
   margin: 2em;
@@ -19,7 +20,7 @@ h3 {
 }
 a{
   color: #007bff;
-  word-break: break-all;
+  word-break:keep-all;
   white-space:normal;
   font-size: 0.9em;
 }
@@ -46,20 +47,6 @@ form {
 input {
   margin:none;
   border: 1px solid grey
-}
-.jumbotron{
-  background-image:url("sodabackground.jpeg");
-  background-size: 100%,100%;
-  background-color: white;
-  height:107vh;
-  width:100vw;
-  margin-top:-10vh;
-  text-align:center;
-}
-.jumbotron h1{
-  font-size:50px;
-  color:white;
-  text-shadow:2px 2px black;
 }
 #searchForm{
   margin-top:15px;

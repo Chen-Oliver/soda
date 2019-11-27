@@ -16,3 +16,23 @@
   margin:0;
   background-color: #d2d5d9;
 }
+.jumbotron{
+  background-image:url("sodabackground.jpeg");
+  background-size: 100%,100%;
+  background-color: white;
+  height:107vh;
+  width:100vw;
+  margin-top:-10vh;
+  text-align:center;
+}
+.jumbotron h1{
+  font-size:50px;
+  color:white;
+  text-shadow:2px 2px black;
+  word-break: keep-all;
+  white-space:normal;
+}
+#footer{
+  word-break: keep-all;
+  white-space:normal;
+}
