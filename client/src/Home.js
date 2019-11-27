@@ -6,7 +6,6 @@ class Home extends Component{
   constructor(props){
     super(props);
     this.state = {
-      text: '',
       search:[],
       all:[],
       loginState:"",
@@ -15,13 +14,9 @@ class Home extends Component{
     this.showSearchResults=this.showSearchResults.bind(this);
   }
 componentDidMount() {
-    this.fetchGreeting();
-  }
-fetchGreeting = async () => {
-    const response = await fetch('/api/greet');
-    const resJSON= await response.json();
-    this.setState({text:resJSON.text});
-  }
+
+}
+
 showSearchResults(){
   if(this.state.search.length>0){
     return(
@@ -159,13 +154,13 @@ handleSignup=async(event)=>{
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridLoginUsername">
                     <Form.Label>Username:</Form.Label>
-                    <Form.Control autocomplete="on" className="login" type="text" name="loginUsername" required/>
+                    <Form.Control className="login" type="text" name="loginUsername" required/>
                   </Form.Group>
                 </Form.Row>
                 <Form.Row>
                   <Form.Group as={Col} controlId="formGridLoginPassword">
                   <Form.Label>Password:</Form.Label>
-                  <Form.Control autocomplete="on" type="password" className="login" name="loginPassword" required/>
+                  <Form.Control type="password" className="login" name="loginPassword" required/>
                   </Form.Group>
                 </Form.Row>
                 <Row>

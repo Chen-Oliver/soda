@@ -21,9 +21,42 @@ const server = http.createServer(app);
 const io = socketIO(server);
 io.on("connection", function(socket) {
     console.log("New client connected");
-    socket.emit('about',{hello:"soda soda soda"});
-    socket.on("sendRequest", (data) => console.log(data.sender));
-    socket.on("acceptRequest", (data) => console.log(data.acceptedBy));
+    socket.on("sendRequest", (data) =>{
+      let session = driver.session();
+      session
+      .run("MATCH (u:User{username:{userParam}}) MATCH (u2:User{username:{userParam2}}) MERGE (u)-[:AcceptRequest]->(u2) MERGE (u)<-[:Pending]-(u2)",{
+        userParam:data.target,userParam2:data.sender})
+      .then(function(result) {
+          session.close();
+      })
+      .catch(function(error) {
+          console.log(error);
+      });
+      io.sockets.emit('requestReceived',{sender:data.sender,target:data.target});
+    });
+    socket.on("acceptRequest", (data) => {
+      let session = driver.session();
+      session
+      .run("MATCH (u:User{username:{userParam}}) MATCH (u2:User{username:{userParam2}}) MERGE (u)-[:Friends]-(u2)",{
+        userParam:data.acceptor,userParam2:data.requester})
+      .then(function(result) {
+          session.close();
+      })
+      .catch(function(error) {
+          console.log(error);
+      });
+      session = driver.session();
+      session
+      .run("MATCH (u:User{username:{userParam}}) MATCH (u2:User{username:{userParam2}}) MATCH (u)-[r:AcceptRequest]-(u2) MATCH (u)-[r2:Pending]-(u2) DELETE r DELETE r2",{
+        userParam:data.acceptor,userParam2:data.requester})
+      .then(function(result) {
+          session.close();
+      })
+      .catch(function(error) {
+          console.log(error);
+      });
+      io.sockets.emit('acceptReceived',{acceptor:data.acceptor,requester:data.requester});
+    });
     socket.on("disconnect", () => console.log("Client disconnected"));
 });
 server.listen(PORT, () => console.log(`Listening on port ${PORT}`));
@@ -65,6 +98,57 @@ userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
   });
 });
 
+app.get('/api/getUsers',cors(),async(req,res,next)=> {
+  var session = driver.session();
+session
+  .run("MATCH (u:User) RETURN u.username")
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+});
+app.get('/api/getFriends/:username',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH (u:User{username:{userParam}})-[:Friends]-(u2:User) RETURN u2.username",{
+    userParam:req.params.username})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+})
+app.get('/api/getFriendRequests/:username',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH (u:User{username:{userParam}})-[:AcceptRequest]->(u2:User) RETURN u2.username",{
+    userParam:req.params.username})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+})
+app.get('/api/getPending/:username',cors(),async(req,res,next)=>{
+  var session = driver.session();
+session
+  .run("MATCH (u:User{username:{userParam}})-[:Pending]->(u2:User) RETURN u2.username",{
+    userParam:req.params.username})
+  .then(function(result) {
+      res.send(result);
+      session.close();
+  })
+  .catch(function(error) {
+      console.log(error);
+  });
+})
 app.get('/api/getFavorites/:username',cors(),async(req,res,next)=> {
   var session = driver.session();
 session
