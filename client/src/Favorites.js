@@ -102,7 +102,8 @@ class Favorites extends Component{
     return (
       <div className="App">
         {this.showFavs()}
-        <h3 style={{textAlign:"center"}}>Visit Browse to Add Favorites</h3>
+        <h5 style={{textAlign:"center"}}>Visit Browse to Add Favorites</h5>
+        <h5 style={{textAlign:"center"}}>Visit Profile to Add Friends</h5>
       </div>
     )
   }
