@@ -74,7 +74,7 @@ app.get('/api/addFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH (u:User {username:{userParam}}) MERGE (c:Clothing {imageurl:{imageParam}}) ON CREATE SET c.isCreated=[true] ON MATCH SET c.isCreated=[true] FOREACH(ifthen in c.isCreated | CREATE (u)-[:Favorite]->(c) REMOVE c.isCreated)",{
-userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
+userParam:req.params.username.toLowerCase(),imageParam:decodeURI(req.params.imageurl)})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -88,7 +88,7 @@ app.get('/api/getFriendFavorites/:username',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH(u:User{username:{userParam}})-[:Friends*1..3]-(u2:User)-[:Favorite]-(c:Clothing) WHERE u2<>u return DISTINCT u2.username,c.imageurl LIMIT 25",{
-userParam:req.params.username})
+userParam:req.params.username.toLowerCase()})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -102,7 +102,7 @@ app.get('/api/removeFavorite/:username/:imageurl',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH (u:User {username:{userParam}})-[f:Favorite]-(c:Clothing{imageurl:{imageParam}}) Delete f",{
-userParam:req.params.username,imageParam:decodeURI(req.params.imageurl)})
+userParam:req.params.username.toLowerCase(),imageParam:decodeURI(req.params.imageurl)})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -128,7 +128,7 @@ app.get('/api/getFriends/:username',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH (u:User{username:{userParam}})-[:Friends]-(u2:User) RETURN u2.username",{
-    userParam:req.params.username})
+    userParam:req.params.username.toLowerCase()})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -141,7 +141,7 @@ app.get('/api/getFriendRequests/:username',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH (u:User{username:{userParam}})-[:AcceptRequest]->(u2:User) RETURN u2.username",{
-    userParam:req.params.username})
+    userParam:req.params.username.toLowerCase()})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -154,7 +154,7 @@ app.get('/api/getPending/:username',cors(),async(req,res,next)=>{
   var session = driver.session();
 session
   .run("MATCH (u:User{username:{userParam}})-[:Pending]->(u2:User) RETURN u2.username",{
-    userParam:req.params.username})
+    userParam:req.params.username.toLowerCase()})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -167,7 +167,7 @@ app.get('/api/getFavorites/:username',cors(),async(req,res,next)=> {
   var session = driver.session();
 session
   .run("MATCH (User {username:{userParam}})-[:Favorite]->(clothing) RETURN clothing.imageurl",{
-userParam:req.params.username})
+userParam:req.params.username.toLowerCase()})
   .then(function(result) {
       res.send(result);
       session.close();
@@ -181,7 +181,7 @@ app.get('/api/signup/:username/:password',cors(),async(req,res,next)=> {
     var session = driver.session();
   session
       .run("Merge (n:User {username:{userParam}}) ON CREATE SET n.password={passwordParam},n.found=0 ON MATCH SET n.found=1 RETURN n.username,n.found",{
-    userParam:req.params.username,passwordParam:hash})
+    userParam:req.params.username.toLowerCase(),passwordParam:hash})
       .then(function(result) {
           if(result.records[0]._fields[1]["low"]){
             res.json("Username already exists");
@@ -202,7 +202,7 @@ app.get('/api/login/:username/:password',cors(),async(req,res,next)=> {
     var session = driver.session();
   session
       .run("MATCH (user:User {username:{userParam}}) RETURN user.password",{
-    userParam:req.params.username})
+    userParam:req.params.username.toLowerCase()})
       .then(function(result) {
           if(result.records.length===0){
             res.json("No such user");

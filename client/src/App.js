@@ -8,6 +8,7 @@ import Browse from './Browse';
 import Favorites from './Favorites';
 import NotFound from './NotFound';
 import Profile from './Profile'
+import Admin from './Admin'
 import './App.css';
 
 class App extends Component {
@@ -37,6 +38,7 @@ class App extends Component {
             <Link to="/favorites">Favorites</Link>
             <Link to="/random">Random</Link>
             <Link to="/profile">Profile({this.state.curUser})</Link>
+            {this.state.curUser==="admin"?<Link to="/admin">Admin Tools</Link>:null}
             <Link to="/about">About</Link>
           </Nav>
           </Navbar.Collapse>
@@ -47,6 +49,7 @@ class App extends Component {
            <Route exact path='/favorites' render={(props) => (<Favorites {...props} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/random' component={Random}></Route>
            <Route exact path='/profile' render={(props) => (<Profile {...props} curUser={this.state.curUser} />)}></Route>
+           {this.state.curUser==="admin"?<Route exact path='/admin' component={Admin}></Route>:null}
            <Route exact path='/about' component={About}></Route>
            <Route component={NotFound}></Route>
          </Switch></div>:<div><Navbar bg="light" variant="light">
