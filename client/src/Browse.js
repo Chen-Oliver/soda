@@ -11,6 +11,7 @@ const typeOptions = [
   { value: "Shoes", label: 'Shoes' },
   { value: "Sweater", label: 'Sweater' }
 ]
+var brandOptions=[];
 const colorOptions = [
   { value: "Red", label: 'Red' },
   { value: "Green", label: 'Green' },
@@ -48,12 +49,14 @@ class Browse extends Component{
       actualOption:null,
       priceOption:null,
       genderOption:null,
+      brandOption:null,
       filter:{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
         "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
         "price":["0-25","25-50","50-100","100-150","150-250","250-10000"],//price filters
-        "gender":["Male","Female"]
+        "gender":["Male","Female"],
+        "brandname":[]
       },
       favorites:{}//each time this is updated, update neo4j database as well(remove/add favorite)
     }
@@ -62,6 +65,21 @@ class Browse extends Component{
   }
   componentDidMount() {
       this.getAll();
+      this.getBrands();
+  }
+  getBrands=async(event)=>{
+    const response=await fetch('/api/getBrands');
+    const resJSON=await response.json();
+    var temp = [];
+    for(let brand of resJSON){
+      temp.push(brand.brandname);
+      brandOptions.push({"value":brand.brandname,"label":brand.brandname})
+    }
+    this.setState({filter:{
+      ...this.state.filter,
+      ["brandname"]:temp
+      }
+    });
   }
   getAll=async(event)=>{
     const response = await fetch('/api/getAll/');
@@ -150,7 +168,7 @@ class Browse extends Component{
     this.setState({all:resJSON});
   }
   clearFilters(){
-    this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,all:allClothes,filter:{}});
+    this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,brandOption:null,all:allClothes,filter:{}});
   }
   showAll(){
     if(this.state.all[0]==="Loading"){
@@ -189,6 +207,16 @@ class Browse extends Component{
           options={priceOptions}
           isMulti
           onChange={event=>this.filterChange(event,"price",priceOptions,"priceOption")}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        <div>
+          <strong>Brand</strong>
+          <Select
+          value={this.state.brandOption}
+          options={brandOptions}
+          isMulti
+          onChange={event=>this.filterChange(event,"brandname",brandOptions,"brandOption")}
           closeMenuOnSelect={false}
           />
         </div>

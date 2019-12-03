@@ -235,6 +235,18 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
   }
 })
 
+app.get('/api/getBrands', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT brandName from brands').catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
+
+
 app.get('/api/similar/:price/:color/:type/:gender', cors(), async (req, res, next) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
