@@ -367,6 +367,17 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
     client.end();
 });
 
+app.get('/api/knn/:season', knn);
+
+function knn(req, res) {
+  var spawn = require("child_process").spawn;
+  var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+  process.stdout.on('data', function (data) {
+      console.log(data.toString())
+    res.send(data.toString());
+  });
+}
+
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
 // Anything that doesn't match the above, send back index.html
