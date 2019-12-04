@@ -375,7 +375,7 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   process.stdout.on('data', function (data) {
     // console.log(data);
     res.json(data.toString());
-    spawn.kill('SIGINT');
+    
     return;
   });
   // process.stdout.on('data', (data) => {
