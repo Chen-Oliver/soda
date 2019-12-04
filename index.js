@@ -375,7 +375,6 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   process.stdout.on('data',(data)=> {
     // console.log(data);
     res.json(data.toString());
-    return next();
   });
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
@@ -399,7 +398,6 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   //   if (err) res.json(err);
   //   res.json(data.toString())
   // });
-  return;
 });
 
 // function knn(req, res) {
