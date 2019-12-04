@@ -8,12 +8,21 @@ class Recommendations extends Component{
         this.state={
             outfit:'',
             season:'',
-            selectValue:""
+            selectValue:"spring"
         };
         this.onChange = this.onChange.bind(this);
     }
 
-  generateFit = async()=>{
+  generateFit = async(event)=>{
+    let call = '/api/knn/' + this.state.selectValue;
+    // call = '/api/getAll/'
+    console.log(call)
+
+    const response = await fetch(call);
+    console.log(response)
+    const resJSON= await response.json();
+    console.log(resJSON)
+
     var input = [
         [
             "https://lp2.hm.com/hmgoepprod?set=source[/f5/f8/f5f8c4ba1e22488ac690d08cd1a26101750d55d7.jpg],origin[dam],category[men_jacketscoats_bikerjackets],type[DESCRIPTIVESTILLLIFE],res[m],hmver[1]&call=url[file:/product/main]",
@@ -32,18 +41,7 @@ class Recommendations extends Component{
         ]
     ];
 
-    // this.setState({outfit:
-    //     <div>
-    //         <img 
-    //         src='https://lp2.hm.com/hmgoepprod?set=source[/76/61/7661b9b93c349d7d4e740eba9d2a33530d54c772.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[m],hmver[1]&call=url[file:/product/main]'
-    //         alt='new'
-    //         id='image'
-    //     />
-    //     </div>
-    // });
-    // console.log(this.state.outfit)
-
-    var output = input.map( function( row, i ) {
+    var output = resJSON.map( function( row, i ) {
         return row.map( function( cell, j ) { 
             let img = (       
                     <img 
@@ -91,11 +89,10 @@ class Recommendations extends Component{
             <select 
                 value={this.state.selectValue} 
                 onChange={this.onChange}>
-                <option value="" disabled={this.selectValue!==""}></option>
-                <option value="Spring">Spring</option>
-                <option value="Summer">Summer</option>
-                <option value="Fall">Fall</option>
-                <option value="Winter">Winter</option>
+                <option value="spring">Spring</option>
+                <option value="summer">Summer</option>
+                <option value="fall">Fall</option>
+                <option value="winter">Winter</option>
             </select>
         </div>
         <h3>{this.state.outfit}</h3>
