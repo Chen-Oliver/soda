@@ -36,8 +36,8 @@ const priceOptions=[
   { value: "250-10000", label: '$250 and higher' }
 ]
 const genderOptions=[
-  { value:"Male",label:"Male" },
-  { value:"Female",label:"Female" }
+  { value:"Male",label:"Men" },
+  { value:"Female",label:"Women" }
 ]
 var allClothes;
 class Browse extends Component{

@@ -57,7 +57,8 @@ handleSignup=async(event)=>{
       <div className="App">
       <div className="jumbotron d-flex align-items-center">
         <div className="container">
-          <h1 id="intro">{"Hello "+this.props.curUser+"! Welcome to the SODA App"}</h1>
+          <h2>SODA</h2>
+          <h1 id="intro">{"Hello "+this.props.curUser+"! Welcome!"}</h1>
           {!this.props.loggedIn?<Tabs defaultActiveKey="loginTab" id="login-signup-tabs">
             <Tab eventKey="loginTab" title="Login">
               <Form id="loginForm" onSubmit={this.handleLogin}>
