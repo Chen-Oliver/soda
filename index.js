@@ -372,18 +372,18 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   var spawn = require("child_process").spawn;
   var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
 
-  // process.stdout.on('data', function (data) {
-  //   res.send(data.toString());
-  // });
-  process.stdout.on('data', (data) => {
-      console.log(`data:${data}`);
-    });
-    process.stderr.on('data', (data) => {
-      console.log(`error:${data}`);
-    });
-    process.on('close', () => {
-      console.log("Closed");
-    });
+  process.stdout.on('data', function (data) {
+    res.send(data.toString());
+  });
+  // process.stdout.on('data', (data) => {
+  //     console.log(`data:${data}`);
+  //   });
+  //   process.stderr.on('data', (data) => {
+  //     console.log(`error:${data}`);
+  //   });
+  //   process.on('close', () => {
+  //     console.log("Closed");
+  //   });
 
   // var options = {
   //   args:
