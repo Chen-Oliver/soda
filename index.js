@@ -384,12 +384,12 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
   //   });
-    process.stderr.on('data', (data) => {
-      console.log(`error:${data}`);
-    });
-    process.on('close', () => {
-      console.log("Closed");
-    });
+    // process.stderr.on('data', (data) => {
+    //   console.log(`error:${data}`);
+    // });
+    // process.on('close', () => {
+    //   console.log("Closed");
+    // });
 
   // var options = {
   //   args:
