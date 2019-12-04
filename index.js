@@ -375,8 +375,7 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   process.stdout.on('data', function (data) {
     // console.log(data);
     res.json(data.toString());
-    
-    return;
+    return next();
   });
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
