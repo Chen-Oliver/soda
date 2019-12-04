@@ -368,13 +368,19 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
     client.end();
 });
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 app.get('/api/knn/:season', cors(), async (req, res, next) => {
   var spawn = require("child_process").spawn;
   var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
   //
   process.stdout.on('data', function (data) {
-    // console.log(data);
+    await sleep(2000);
     res.json(data.toString());
+    await sleep(2000);
   });
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
