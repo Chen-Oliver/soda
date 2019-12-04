@@ -376,6 +376,11 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
     // console.log(data);
     res.json(data.toString());
   });
+
+  process.on('close', function (code) {
+      console.log('process exit code ' + code);
+  });
+
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
   //   });

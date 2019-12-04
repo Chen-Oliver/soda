@@ -45,7 +45,6 @@ class Recommendations extends Component{
     } )
 
     this.setState({outfit: output});
-    return;
     // const response = await fetch('/api/getFirst');
     // const resJSON= await response.json();
     // this.setState({random:
