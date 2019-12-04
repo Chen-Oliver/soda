@@ -4,6 +4,23 @@ import numpy as np
 from PIL import Image
 import json
 
+def fetch_from_db(types):
+    import os
+    import psycopg2
+
+    DATABASE_URL = os.environ['DATABASE_URL']
+
+    connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = connection.cursor()
+    postgreSQL_select_Query = "Select imageURL, type from colors NATURAL JOIN clothing"
+
+    cursor.execute(postgreSQL_select_Query)
+    mobile_records = cursor.fetchall()
+
+    for row in mobile_records:
+        types[row[1]].append(row[0])
+
+
 def load_image( infilename ) :
     img = Image.open( infilename )
     img.load()
@@ -42,12 +59,9 @@ def load_dataset():
 
 
     types = {'Sweater':[], 'Pants':[], 'Coat':[], 'Shirt':[], 'Jacket':[], 'Shoes':[]}
-    with open('nn/cnn_code/image_and_type.txt') as fp:
-       for line in fp:
-           url, type = line.split('|')
-           url = url.strip()
-           type = type.strip()
-           types[type].append(url)
+
+    fetch_from_db(types)
+    
 
     rec_set = []
     count = 0
