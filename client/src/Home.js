@@ -19,6 +19,7 @@ componentDidMount() {
 handleLogin=async(event)=>{
   event.preventDefault();
   const loginInputs =event.target.getElementsByClassName("login");
+  console.log("wtf is happening")
   let username = loginInputs.loginUsername.value;
   let password = loginInputs.loginPassword.value;
   //call backend login here, check success
