@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import './Recommendations.css';
 
 class Recommendations extends Component{
@@ -14,6 +14,8 @@ class Recommendations extends Component{
     }
 
   generateFit = async(event)=>{
+    this.setState({outfit: "Loading..."});
+
     let call = '/api/knn/' + this.state.selectValue;
 
     const response = await fetch(call);
@@ -65,7 +67,7 @@ class Recommendations extends Component{
   render(){
     return (
       <div className="App">
-        <button type='submit' onClick={this.generateFit}>Generate outfit</button>
+        <Button type='submit' onClick={this.generateFit}>Generate outfit</Button>
         <div>
             <select
                 value={this.state.selectValue}

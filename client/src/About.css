@@ -1,0 +1,20 @@
+.text {
+    padding-left: 15%;
+    padding-right: 15%;
+}
+
+h3 {
+    text-align: center;
+}
+
+.picture {
+    height: 400px;
+    width: 400px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+#members {
+    padding-left: 5%;
+    padding-right: 5%;
+}
