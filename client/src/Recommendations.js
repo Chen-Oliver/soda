@@ -18,33 +18,34 @@ class Recommendations extends Component{
 
     const response = await fetch(call);
     const resJSON= await response.json();
+    console.log("wtf");
     console.log(resJSON.replace(/'/g, '"'));
     let processedJson = JSON.parse(resJSON.replace(/'/g, '"'));
     console.log(JSON.stringify(processedJson, null, 4))
 
-    var output = processedJson.map( function( row, i ) {
-        return row.map( function( cell, j ) {
-            let img = (
-                    <img
-                    src={cell}
-                    alt='new'
-                    id='image'
-                />
-                );
-            let test = (
-                <div>
-                    Outfit {i+1}
-                </div>
-            )
-            if (j == 0){
-                return [test, img];
-            } else {
-                return img
-            }
-        } );
-    } )
-
-    this.setState({outfit: output});
+    // var output = processedJson.map( function( row, i ) {
+    //     return row.map( function( cell, j ) {
+    //         let img = (
+    //                 <img
+    //                 src={cell}
+    //                 alt='new'
+    //                 id='image'
+    //             />
+    //             );
+    //         let test = (
+    //             <div>
+    //                 Outfit {i+1}
+    //             </div>
+    //         )
+    //         if (j == 0){
+    //             return [test, img];
+    //         } else {
+    //             return img
+    //         }
+    //     } );
+    // } )
+    //
+    // this.setState({outfit: output});
 
     // const response = await fetch('/api/getFirst');
     // const resJSON= await response.json();
