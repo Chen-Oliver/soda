@@ -367,16 +367,25 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
     client.end();
 });
 
-app.get('/api/knn/:season', knn);
+app.get('/api/knn/:season', cors(), async (req, res, next) => {
+  res.send("deeznuts")
+  // var spawn = require("child_process").spawn;
+  // var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+  // process.stdout.on('data', function (data) {
+  //     console.log(data.toString())
+  //   res.send(data.toString());
+  // });
+});
 
-function knn(req, res) {
-  var spawn = require("child_process").spawn;
-  var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
-  process.stdout.on('data', function (data) {
-      console.log(data.toString())
-    res.send(data.toString());
-  });
-}
+// function knn(req, res) {
+//   console.log("rec!!")
+//   var spawn = require("child_process").spawn;
+//   var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+//   process.stdout.on('data', function (data) {
+//       console.log(data.toString())
+//     res.send(data.toString());
+//   });
+// }
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))
