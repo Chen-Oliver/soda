@@ -67,11 +67,12 @@ def load_data_json(filename):
 
 def main(season):
 
-    # train_set, train_labels, rec_set, url_to_jpg = reader.load_dataset()
-    # seasons = {'summer': 0, 'fall': 1, 'winter': 2, 'spring': 3}
-    #
-    # res = knn(train_set, train_labels, rec_set, url_to_jpg, seasons[season])
-    print("[[1, 2, 3], [1, 2, 3]]")
+    train_set, train_labels, rec_set, url_to_jpg = reader.load_dataset()
+    seasons = {'summer': 0, 'fall': 1, 'winter': 2, 'spring': 3}
+
+    res = knn(train_set, train_labels, rec_set, url_to_jpg, seasons[season])
+    print(res)
+    # print("[[1, 2, 3], [1, 2, 3]]")
 
 
 

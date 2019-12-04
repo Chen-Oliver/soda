@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const http = require("http");
 const socketIO = require("socket.io");
 
+
 const PORT = process.env.PORT || 5000
 
 var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
@@ -368,14 +369,26 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
 });
 
 app.get('/api/knn/:season', cors(), async (req, res, next) => {
-  var spawn = require("child_process").spawn;
-  var process = spawn('python', ["nn/cnn_code/knn.py", req.params.season]);
+  // var spawn = require("child_process").spawn;
+  // var process = spawn('python', ["nn/cnn_code/knn.py", req.params.season]);
+  //
+  // process.stdout.on('data', function (data) {
+  //   console.log(data);
+  //   res.json(data.toString());
+  // });
 
-  process.stdout.on('data', function (data) {
-    console.log(data);
-    res.json(data.toString());
+  var options = {
+    args:
+    [
+      req.params.season, // starting funds
+    ]
+  }
+  console.log(options);
+  const pyshell = require("python-shell");
+  pyshell.PythonShell.run('nn/cnn_code/knn.py', options, function (err, data) {
+    if (err) res.json(err);
+    res.json(data.toString())
   });
-
 });
 
 // function knn(req, res) {
