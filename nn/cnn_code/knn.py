@@ -13,7 +13,7 @@ def calc_l2(train_np, train_labels, rec_set, im_dict, season):
     for outfit in rec_set:
         # print(count)
         count += 1
-        if count == 1000:
+        if count == 2000:
             break
         top, bot, shoe = outfit
         rec = np.vstack( (np.vstack( (im_dict[top], im_dict[bot]) ), im_dict[shoe]) )
@@ -44,8 +44,9 @@ def knn(train_set, train_labels, rec_set, url_to_jpg, season):
     shuffle(rec_set)
     train_np = []
     im_dict = {}
+
     for k, v in url_to_jpg.items():
-        path = '../images/' + v
+        path = 'nn/images/' + v
         image = Image.open(path)
         image.load()
         data = np.asarray( image, dtype="int32" ).flatten()
@@ -63,13 +64,16 @@ def load_data_json(filename):
     with open(filename) as f:
         data = json.load(f)
         return data
+
 def main(season):
+
     train_set, train_labels, rec_set, url_to_jpg = reader.load_dataset()
     seasons = {'summer': 0, 'fall': 1, 'winter': 2, 'spring': 3}
+
     res = knn(train_set, train_labels, rec_set, url_to_jpg, seasons[season])
-    for i in res:
-        print(i)
-    return res
+    print(res)
+
+
 
 import sys
 if __name__ == '__main__':

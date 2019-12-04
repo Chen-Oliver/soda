@@ -368,21 +368,14 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
 });
 
 app.get('/api/knn/:season', cors(), async (req, res, next) => {
-  // var spawn = require("child_process").spawn;
-  // var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
-  // process.stdout.on('data', function (data) {
-  //     console.log(data.toString())
-  //   res.json(data.toString());
-  // });
-  let list = [
-    [
-      6, 9, 6, 9
-    ],
-    [
-      4, 2, 0, 4
-    ]
-  ]
-  res.json(list)
+  var spawn = require("child_process").spawn;
+
+  var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+
+  process.stdout.on('data', function (data) {
+    res.json(data.toString());
+  });
+
 });
 
 // function knn(req, res) {

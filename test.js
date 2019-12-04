@@ -1,29 +1,5 @@
-const express = require('express');
-const cors = require('cors');
-// Create the server
-const app = express();
+// console.log(JSON.parse("[['https://www.jcrew.com/s7-img-facade/AF005_WX9758?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/K2089_BK0001?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://bananarepublic.gap.com/webcontent/0014/364/575/cn14364575.jpg'], ['https://www.jcrew.com/s7-img-facade/AA148_WX8041?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/G1186_BR6332?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://cdn.shopify.com/s/files/1/0007/0051/4360/products/pxbls-h54156_lzz_00_1000x.jpg?v=1571712169'], ['https://lp2.hm.com/hmgoepprod?set=source[/ae/3c/ae3cf1714cc98d4b90cec9bf92991932abe0d9b3.jpg],origin[dam],category[ladies_shirtsblouses_blouses],type[DESCRIPTIVESTILLLIFE],res[s],hmver[1]&call=url[file:/product/main]', 'https://bananarepublic.gap.com/webcontent/0017/668/949/cn17668949.jpg', 'https://lp2.hm.com/hmgoepprod?set=source[/ec/79/ec7968e4ec4a868b084ea247deb17b25a23e2fc9.jpg],origin[dam],category[men_shoes_boots],type[DESCRIPTIVESTILLLIFE],res[s],hmver[2]&call=url[file:/product/main]'], ['https://bananarepublic.gap.com/webcontent/0017/539/122/cn17539122.jpg', 'https://www.jcrew.com/s7-img-facade/AE579_WX0774?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://lp2.hm.com/hmgoepprod?set=source[/0e/ae/0eaebaa70d58ef4b43ec290fdc5196127436c81e.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[s],hmver[1]&call=url[file:/product/main]'], ['https://www.jcrew.com/s7-img-facade/AF007_GY6469?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/AE579_WX6634?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://bananarepublic.gap.com/webcontent/0016/840/900/cn16840900.jpg']]"))
 
-
-app.get('/api/knn/:season', knn);
-
-async function knn(req, res) {
-  // using spawn instead of exec, prefer a stream over a buffer
-  // to avoid maxBuffer issue
-  var spawn = require("child_process").spawn;
-  var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
-  console.log("wtf");
-  await process.stdout.on('data', function (data) {
-      console.log(data.toString())
-      res.send(data.toString());
-  });
-}
-
-async function wrap()
-
-// handleSignup=async()=>{
-//   const response = await fetch('/api/knn/winter');
-//   const resJSON = await response.json();
-// }
-// handleSignup()
-req = {'params':{'season':'winter'}}
-knn(req, 0)
+str = "[['https://www.jcrew.com/s7-img-facade/AF005_WX9758?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/K2089_BK0001?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://bananarepublic.gap.com/webcontent/0014/364/575/cn14364575.jpg'], ['https://www.jcrew.com/s7-img-facade/AA148_WX8041?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/G1186_BR6332?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://cdn.shopify.com/s/files/1/0007/0051/4360/products/pxbls-h54156_lzz_00_1000x.jpg?v=1571712169'], ['https://lp2.hm.com/hmgoepprod?set=source[/ae/3c/ae3cf1714cc98d4b90cec9bf92991932abe0d9b3.jpg],origin[dam],category[ladies_shirtsblouses_blouses],type[DESCRIPTIVESTILLLIFE],res[s],hmver[1]&call=url[file:/product/main]', 'https://bananarepublic.gap.com/webcontent/0017/668/949/cn17668949.jpg', 'https://lp2.hm.com/hmgoepprod?set=source[/ec/79/ec7968e4ec4a868b084ea247deb17b25a23e2fc9.jpg],origin[dam],category[men_shoes_boots],type[DESCRIPTIVESTILLLIFE],res[s],hmver[2]&call=url[file:/product/main]'], ['https://bananarepublic.gap.com/webcontent/0017/539/122/cn17539122.jpg', 'https://www.jcrew.com/s7-img-facade/AE579_WX0774?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://lp2.hm.com/hmgoepprod?set=source[/0e/ae/0eaebaa70d58ef4b43ec290fdc5196127436c81e.jpg],origin[dam],category[],type[DESCRIPTIVESTILLLIFE],res[s],hmver[1]&call=url[file:/product/main]'], ['https://www.jcrew.com/s7-img-facade/AF007_GY6469?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://www.jcrew.com/s7-img-facade/AE579_WX6634?fmt=jpeg&qlt=90,0&resMode=sharp&op_usm=.1,0,0,0&crop=0,0,0,0&wid=850&hei=850', 'https://bananarepublic.gap.com/webcontent/0016/840/900/cn16840900.jpg']]"
+new_str = str.replace(/'/g, '"')
+console.log(new_str)
