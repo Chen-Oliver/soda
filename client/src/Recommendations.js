@@ -20,8 +20,8 @@ class Recommendations extends Component{
     const resJSON= await response.json();
     console.log("wtf");
     console.log(resJSON.replace(/'/g, '"'));
-    let processedJson = JSON.parse(resJSON.replace(/'/g, '"'));
-    console.log(JSON.stringify(processedJson, null, 4))
+    // let processedJson = JSON.parse(resJSON.replace(/'/g, '"'));
+    // console.log(JSON.stringify(processedJson, null, 4))
 
     // var output = processedJson.map( function( row, i ) {
     //     return row.map( function( cell, j ) {
