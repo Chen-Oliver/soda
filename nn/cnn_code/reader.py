@@ -26,35 +26,51 @@ def load_data_json(filename):
         data = json.load(f)
         return data
 
-def load_dataset(filename, favorites):
+def load_dataset():
 
-    images = [(f, join(filename, f)) for f in listdir(filename) if isfile(join(filename, f))]
-    data_dict = load_data_json("../preprocess/data.json")
+    recs = load_data_json("../our_rec.json")
 
-    train_labels = []
+    summer = recs["summer"]
+    spring = recs['spring']
+    winter = recs['winter']
+    fall = recs['fall']
+
     train_set = []
+    train_label = []
+
+    for summ, spr, win, fa in zip(summer, spring, winter, fall):
+        train_set.append(summ)
+        train_label.append(0)
+
+        train_set.append(fa)
+        train_label.append(1)
+
+        train_set.append(win)
+        train_label.append(2)
+
+        train_set.append(spr)
+        train_label.append(3)
+
+    types = {'Sweater':[], 'Pants':[], 'Coat':[], 'Shirt':[], 'Jacket':[], 'Shoes':[]}
+    with open('image_and_type.txt') as fp:
+       for line in fp:
+           url, type = line.split('|')
+           url = url.strip()
+           type = type.strip()
+           types[type].append(url)
+
     rec_set = []
-    rec_names = []
+    count = 0
 
-    for image in images:
-        fname, image_path = image
+    for tops in (types['Sweater'] + types['Coat'] + types['Shirt'] + types['Jacket']):
+        for bots in (types['Pants']):
+            for shoe in (types['Shoes']):
+                temp = [tops, bots, shoe]
+                if temp not in train_set:
+                    rec_set.append((tops, bots, shoe))
+                    count += 1
 
-        in_fav = False
-        if data_dict[fname] in favorites:
-            train_labels.append(1)
-            in_fav = True
-        else:
-            train_labels.append(0)
+    url_to_jpg = load_data_json("../preprocess/url_to_jpg.json")
 
-        im = Image.open(image_path)
-        np_im = np.array(im).flatten()
-        train_set.append(np_im)
-        # if not in_fav:
-        rec_set.append(np_im)
-        rec_names.append(fname)
-
-    train_set = np.array(train_set)
-    train_labels = np.array(train_labels)
-    rec_set = np.array(rec_set)
-
-    return train_set, train_labels, rec_set, rec_names
+    return train_set, train_label, rec_set, url_to_jpg
+load_dataset()
