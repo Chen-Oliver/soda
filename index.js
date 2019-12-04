@@ -377,8 +377,9 @@ app.get('/api/knn/:season', cors(), async (req, res, next) => {
   var spawn = require("child_process").spawn;
   var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
   //
-  process.stdout.on('data', (data)=async => {
-    res.send(data.toString());
+  process.stdout.on('data', (data) => {
+    let data_string = await data.toString();
+    res.json(data_string);
   });
   // process.stdout.on('data', (data) => {
   //     console.log(`data:${data}`);
