@@ -15,11 +15,10 @@ class Recommendations extends Component{
 
   generateFit = async(event)=>{
     let call = '/api/knn/' + this.state.selectValue;
-    // call = '/api/getAll/'
-    // console.log(call)
 
     const response = await fetch(call);
     const resJSON= await response.json();
+    console.log(resJSON.replace(/'/g, '"'));
     let processedJson = JSON.parse(resJSON.replace(/'/g, '"'));
     console.log(JSON.stringify(processedJson, null, 4))
 
