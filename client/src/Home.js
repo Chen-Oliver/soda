@@ -1,14 +1,17 @@
 import React, { Component } from 'react'
-import {Form,Row,Col,Button,Table,Card,Tabs,Tab} from 'react-bootstrap';
+import {Form,Row,Col,Button,ButtonToolbar,ButtonGroup,Table,Card,Tabs,Tab,Modal} from 'react-bootstrap';
 import './Home.css'
 
 class Home extends Component{
   constructor(props){
     super(props);
+
     this.state = {
       all:[],
       loginState:"",
-      signupState:""
+      signupState:"",
+      loginShow: false,
+      signupShow: false
     }
   }
 componentDidMount() {
@@ -52,68 +55,100 @@ handleSignup=async(event)=>{
     this.setState({signupState:"An error occurred. Try again"});
   }
 }
+
+handleLoginShow = () =>{
+  this.setState({ loginShow: true });
+}
+
+handleLoginClose = () =>{
+  this.setState({ loginShow: false });
+}
+
+handleSignupShow = () =>{
+  this.setState({ signupShow: true });
+}
+
+handleSignupClose = () =>{
+  this.setState({ signupShow: false });
+}
+
   render(){
     return(
       <div className="App">
       <div className="jumbotron d-flex align-items-center">
         <div className="container">
           <h2>SODA</h2>
-          <h1 id="intro">{"Hello "+this.props.curUser+"! Welcome!"}</h1>
-          {!this.props.loggedIn?<Tabs defaultActiveKey="loginTab" id="login-signup-tabs">
-            <Tab eventKey="loginTab" title="Login">
-              <Form id="loginForm" onSubmit={this.handleLogin}>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridLoginUsername">
-                    <Form.Label>Username:</Form.Label>
-                    <Form.Control className="login" type="text" name="loginUsername" required/>
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridLoginPassword">
-                  <Form.Label>Password:</Form.Label>
-                  <Form.Control type="password" className="login" name="loginPassword" required/>
-                  </Form.Group>
-                </Form.Row>
-                <Row>
-                <Col>
-                <Button variant="primary" name="loginSubmit" type="submit">
-                  Login
-                </Button>
-                </Col>
-                </Row>
-                <h5>{this.state.loginState}</h5>
-              </Form>
-            </Tab>
-            <Tab eventKey="signupTab" title="Signup">
-              <Form id="signupForm" onSubmit={this.handleSignup}>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridSignupUsername">
-                    <Form.Label>Username:</Form.Label>
-                    <Form.Control autocomplete="on" className="signup" type="text" name="signupUsername" required/>
-                  </Form.Group>
-                </Form.Row>
-                <Form.Row>
-                  <Form.Group as={Col} controlId="formGridSignupPassword">
-                  <Form.Label>Password:</Form.Label>
-                  <Form.Control autocomplete="on" type="password" className="signup" name="signupPassword" required/>
-                  </Form.Group>
-                </Form.Row>
-                <Row>
-                <Col>
-                <Button variant="primary" name="signupSubmit" type="submit">
-                  Sign Up
-                </Button>
-                </Col>
-                </Row>
-                <h5>{this.state.signupState}</h5>
-              </Form>
-            </Tab>
-          </Tabs>:<br/>}
+          {!this.props.loggedIn?<br/>:<h1 id="intro">{"Hello "+this.props.curUser+"! Welcome!"}</h1>}
+          {!this.props.loggedIn?<ButtonToolbar>
+            <div className="login">
+            <Button variant="light" size="lg" type="submit" onClick={this.handleLoginShow}>
+              Login
+            </Button>
+            </div>
+            <div className="signup">
+            <Button variant="light" size="lg" type="submit" onClick={this.handleSignupShow}>
+              Signup
+            </Button>
+            </div>
+
+            <Modal show={this.state.loginShow} onHide={this.handleLoginClose} centered>
+              <Modal.Body>
+                <Form id="loginForm" onSubmit={this.handleLogin}>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridLoginUsername">
+                      <Form.Label>Username:</Form.Label>
+                      <Form.Control className="login" type="text" name="loginUsername" required/>
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridLoginPassword">
+                      <Form.Label>Password:</Form.Label>
+                      <Form.Control type="password" className="login" name="loginPassword" required/>
+                    </Form.Group>
+                  </Form.Row>
+                  <Row>
+                  <Col>
+                  <Button variant="primary" name="loginSubmit" type="submit">
+                    Login
+                  </Button>
+                  </Col>
+                  </Row>
+                  <h5>{this.state.loginState}</h5>
+                </Form>
+              </Modal.Body>
+            </Modal>
+
+            <Modal show={this.state.signupShow} onHide={this.handleSignupClose} centered>
+              <Modal.Body>
+                <Form id="signupForm" onSubmit={this.handleSignup}>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridSignupUsername">
+                      <Form.Label>Username:</Form.Label>
+                      <Form.Control autocomplete="on" className="signup" type="text" name="signupUsername" required/>
+                    </Form.Group>
+                  </Form.Row>
+                  <Form.Row>
+                    <Form.Group as={Col} controlId="formGridSignupPassword">
+                      <Form.Label>Password:</Form.Label>
+                      <Form.Control autocomplete="on" type="password" className="signup" name="signupPassword" required/>
+                    </Form.Group>
+                  </Form.Row>
+                  <Row>
+                  <Col>
+                  <Button variant="primary" name="signupSubmit" type="submit">
+                    Sign Up
+                  </Button>
+                  </Col>
+                  </Row>
+                  <h5>{this.state.signupState}</h5>
+                </Form>
+              </Modal.Body>
+            </Modal>
+          </ButtonToolbar>:<br/>}
         </div>
       </div>
       <h4 id="footer">Brought to you by Team Goodbois: Oliver Chen, Darren Anco, Allen Chen, Steven Lee</h4>
       </div>
-
     )
   }
 }

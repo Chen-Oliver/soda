@@ -28,8 +28,10 @@ class App extends Component {
       return (
         <Router>
          <div>
-         {this.state.loggedIn?<div><Navbar expand="lg" bg="light" variant="light">
-          <Navbar.Brand><Link to="/">SODA</Link></Navbar.Brand>
+         {this.state.loggedIn?<div><Navbar expand="lg" className="navbar-custom">
+          <Navbar.Brand>
+            <Link to="/"><em>SODA</em></Link>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
@@ -52,11 +54,10 @@ class App extends Component {
            {this.state.curUser==="admin"?<Route exact path='/admin' component={Admin}></Route>:null}
            <Route exact path='/about' component={About}></Route>
            <Route component={NotFound}></Route>
-         </Switch></div>:<div><Navbar bg="light" variant="light">
-          <Navbar.Brand><Link to="/">SODA</Link></Navbar.Brand>
+         </Switch></div>:<div><Navbar bg="transparent">
           <Nav className="mr-auto">
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
+            <Link to="/"></Link>
+            <Link to="/about"></Link>
           </Nav>
          </Navbar>
          <Switch>

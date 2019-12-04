@@ -28,7 +28,7 @@ const colorOptions = [
   { value: "Brown", label: 'Brown' }
 ]
 const priceOptions=[
-  { value: "0-25", label: "$25 or lower" },
+  { value: "0-25", label: "$25 and lower" },
   { value: "25-50", label: '$25-$50' },
   { value: "50-100", label: '$50-$100' },
   { value: "100-150", label: '$100-$150' },
