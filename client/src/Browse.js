@@ -11,6 +11,8 @@ const typeOptions = [
   { value: "Shoes", label: 'Shoes' },
   { value: "Sweater", label: 'Sweater' }
 ]
+var brandOptions=[];
+var allBrands=[];
 const colorOptions = [
   { value: "Red", label: 'Red' },
   { value: "Green", label: 'Green' },
@@ -48,12 +50,14 @@ class Browse extends Component{
       actualOption:null,
       priceOption:null,
       genderOption:null,
+      brandOption:null,
       filter:{
         //default filters show all clothes
         "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
         "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
         "price":["0-25","25-50","50-100","100-150","150-250","250-10000"],//price filters
-        "gender":["Male","Female"]
+        "gender":["Male","Female"],
+        "brandname":[]
       },
       favorites:{}//each time this is updated, update neo4j database as well(remove/add favorite)
     }
@@ -62,6 +66,23 @@ class Browse extends Component{
   }
   componentDidMount() {
       this.getAll();
+      this.getBrands();
+  }
+  getBrands=async(event)=>{
+    const response=await fetch('/api/getBrands');
+    const resJSON=await response.json();
+    var temp = [];
+    brandOptions=[];
+    for(let brand of resJSON){
+      temp.push(brand.brandname);
+      brandOptions.push({"value":brand.brandname,"label":brand.brandname})
+    }
+    allBrands=temp;
+    this.setState({filter:{
+      ...this.state.filter,
+      ["brandname"]:temp
+      }
+    });
   }
   getAll=async(event)=>{
     const response = await fetch('/api/getAll/');
@@ -82,29 +103,39 @@ class Browse extends Component{
     this.setState({all:resJSON});
     allClothes=resJSON;
   }
-  applyFilters=()=>{
-    let filters = Object.keys(this.state.filter);
-    var clothes=allClothes;
-    for(let filterType of filters){//what type of filter: type,color,...
-      var bool=false;
-      clothes = clothes.filter((c)=>{
-        bool=false;
-        this.state.filter[filterType].map((option)=>{
-          if(filterType!=="price")bool=bool||(c[filterType]===option);
-          else{
-            bool=bool||(c[filterType]>=Number(option.slice(0,option.indexOf('-')))&&c[filterType]<=Number(option.slice(option.indexOf('-')+1)));
-          }
-        })
-        return bool;
-      })
+  applyFilters=async()=>{
+    // let filters = Object.keys(this.state.filter);
+    // var clothes=allClothes;
+    // for(let filterType of filters){//what type of filter: type,color,...
+    //   var bool=false;
+    //   clothes = clothes.filter((c)=>{
+    //     bool=false;
+    //     this.state.filter[filterType].map((option)=>{
+    //       if(filterType!=="price")bool=bool||(c[filterType]===option);
+    //       else{
+    //         bool=bool||(c[filterType]>=Number(option.slice(0,option.indexOf('-')))&&c[filterType]<=Number(option.slice(option.indexOf('-')+1)));
+    //       }
+    //     })
+    //     return bool;
+    //   })
+    // }
+    // if(clothes.length==0){
+    //   this.setState({all:["None"]});
+    // }
+    // else{
+    //   clothes.sort((a,b)=>a.price-b.price);
+    //   this.setState({all:clothes});
+    // }
+    var prices=[];
+    for(let price of this.state.filter["price"]){
+      var low=Number(price.slice(0,price.indexOf('-')));
+      var high=Number(price.slice(price.indexOf('-')+1));
+      prices.push(low);
+      prices.push(high);
     }
-    if(clothes.length==0){
-      this.setState({all:["None"]});
-    }
-    else{
-      clothes.sort((a,b)=>a.price-b.price);
-      this.setState({all:clothes});
-    }
+    const response = await fetch('/api/browseSearch/'+this.state.filter["type"]+"/"+this.state.filter["actual"]+"/"+prices+"/"+this.state.filter["brandname"]+"/"+this.state.filter["gender"]);
+    const resJSON = await response.json();
+    this.setState({all:resJSON});
   }
   /*
   description:
@@ -150,7 +181,32 @@ class Browse extends Component{
     this.setState({all:resJSON});
   }
   clearFilters(){
-    this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,all:allClothes,filter:{}});
+    this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,brandOption:null,all:allClothes});
+    this.setState({filter:{
+      ...this.state.filter,
+      ["type"]:["Coat","Jacket","Pants","Shirt","Shoes","Sweater"]
+      }
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      ["actual"]:["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"]
+      }
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      ["price"]:["0-25","25-50","50-100","100-150","150-250","250-10000"]
+      }
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      ["gender"]:["Male","Female"]
+      }
+    });
+    this.setState({filter:{
+      ...this.state.filter,
+      ["brandname"]:allBrands
+      }
+    });
   }
   showAll(){
     if(this.state.all[0]==="Loading"){
@@ -193,6 +249,16 @@ class Browse extends Component{
           />
         </div>
         <div>
+          <strong>Brand</strong>
+          <Select
+          value={this.state.brandOption}
+          options={brandOptions}
+          isMulti
+          onChange={event=>this.filterChange(event,"brandname",brandOptions,"brandOption")}
+          closeMenuOnSelect={false}
+          />
+        </div>
+        <div>
           <strong>Gender</strong>
           <Select
           value={this.state.genderOption}
@@ -202,6 +268,7 @@ class Browse extends Component{
           closeMenuOnSelect={false}
           />
         </div>
+        <br/>
         <Button onClick={this.clearFilters}>Reset Filters</Button>
         </div>
         <div id="browseCards">
