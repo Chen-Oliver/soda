@@ -187,6 +187,13 @@ class Browse extends Component{
     console.log("fsakf");
     this.setState({all:resJSON});
   }
+  versatile=async(event)=>{
+    event.preventDefault();
+    const response = await fetch('/api/versatile/');
+    const resJSON = await response.json();
+    console.log("fsakf");
+    this.setState({all:resJSON});
+  }
   clearFilters(){
     this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,brandOption:null,all:allClothes});
     this.setState({filter:{
@@ -277,7 +284,8 @@ class Browse extends Component{
         </div>
         <br/>
         <Button onClick={this.clearFilters}>Reset Filters</Button>
-        <Button onClick={this.greatdeals}>greatdeals</Button>
+        <Button onClick={this.greatdeals}>Great Deals</Button>
+        <Button onClick={this.versatile}>Most Versatile</Button>
         </div>
         <div id="browseCards">
         {this.state.all.map((result)=>{
