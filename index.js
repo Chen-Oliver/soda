@@ -247,6 +247,17 @@ app.get('/api/greatdeals/', cors(), async (req, res, next) => {
   client.end();
 });
 
+app.get('/api/uniquecolors/', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT name, price, gender, color, type, imageURL, c.websiteURL, brandName FROM clothing c NATURAL JOIN colors cl WHERE (SELECT count(*) FROM (SELECT * FROM colors col WHERE col.color=cl.color) AS uniq) = 1').catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
+
 app.get('/api/getBrands', cors(), async (req, res, next) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,

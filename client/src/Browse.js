@@ -184,7 +184,12 @@ class Browse extends Component{
     event.preventDefault();
     const response = await fetch('/api/greatdeals/');
     const resJSON = await response.json();
-    console.log("fsakf");
+    this.setState({all:resJSON});
+  }
+  uniquecolors=async(event)=>{
+    event.preventDefault();
+    const response = await fetch('/api/uniquecolors/');
+    const resJSON = await response.json();
     this.setState({all:resJSON});
   }
   clearFilters(){
@@ -277,7 +282,10 @@ class Browse extends Component{
         </div>
         <br/>
         <Button onClick={this.clearFilters}>Reset Filters</Button>
-        <Button onClick={this.greatdeals}>greatdeals</Button>
+        <br/><br/>
+        <Button variant='success' onClick={this.greatdeals}>Great Deals</Button>
+        <br/><br/>
+        <Button id='uniquecolors' onClick={this.uniquecolors}>Unique Colors</Button>
         </div>
         <div id="browseCards">
         {this.state.all.map((result)=>{
