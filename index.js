@@ -236,6 +236,17 @@ app.get('/api/greet/', cors(), async (req, res, next) => {
   }
 })
 
+app.get('/api/greatdeals/', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT name, price, gender, color, type, imageURL, c.websiteURL, brandName FROM clothing c NATURAL JOIN colors cl WHERE c.price < (SELECT avg(c2.price) FROM brands b NATURAL JOIN clothing c2 WHERE c.type=c2.type AND c.gender = c2.gender AND b.brandName = c.brandName GROUP BY b.brandName) INTERSECT SELECT name, price, gender, color, type, imageURL, c.websiteURL, brandName FROM clothing c NATURAL JOIN colors cl JOIN seasons s ON c.websiteURL = s.websiteURL GROUP BY c.name, c.price, c.gender, cl.color, c.type, cl.imageURL, c.websiteurl HAVING count(season) > 2').catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
+
 app.get('/api/getBrands', cors(), async (req, res, next) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,

@@ -29,20 +29,20 @@ class App extends Component {
       return (
         <Router>
          <div>
-         {this.state.loggedIn?<div><Navbar expand="lg" className="navbar-custom">
+         {this.state.loggedIn?<div><Navbar expand="lg" sticky="top" className="navbar-custom">
           <Navbar.Brand>
-            <Link to="/"><em>SODA</em></Link>
+            <Link to="/" style={{ textDecoration: 'none' }}><em>SODA</em></Link>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="responsive-navbar-nav" />
           <Navbar.Collapse id="responsive-navbar-nav">
           <Nav className="mr-auto">
-            <Link to="/">Home</Link>
-            <Link to="/browse">Browse</Link>
-            <Link to="/favorites">Favorites</Link>
-            <Link to="/recommendations">Recommendations</Link>
-            <Link to="/profile">Profile({this.state.curUser})</Link>
-            {this.state.curUser==="admin"?<Link to="/admin">Admin Tools</Link>:null}
-            <Link to="/about">About</Link>
+            <Link to="/" style={{ color: 'white', textDecoration: 'none' }}>Home</Link>
+            <Link to="/browse" style={{ color: 'white', textDecoration: 'none' }}>Browse</Link>
+            <Link to="/favorites" style={{ color: 'white', textDecoration: 'none' }}>Favorites</Link>
+            <Link to="/recommendations" style={{ color: 'white', textDecoration: 'none' }}>Recommendations</Link>
+            <Link to="/profile" style={{ color: 'white', textDecoration: 'none' }}>Profile({this.state.curUser})</Link>
+            {this.state.curUser==="admin"?<Link to="/admin" style={{ color: 'white', textDecoration: 'none' }}>Admin Tools</Link>:null}
+            <Link to="/about" style={{ color: 'white', textDecoration: 'none' }}>About</Link>
           </Nav>
           </Navbar.Collapse>
          </Navbar>

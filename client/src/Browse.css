@@ -24,3 +24,6 @@ img{
 #browse{
   overflow-x: hidden;
 }
+strong{
+  font-family: 'Noto Sans SC', sans-serif;
+}

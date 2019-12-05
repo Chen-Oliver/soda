@@ -167,6 +167,13 @@ class Browse extends Component{
     const resJSON = await response.json();
     this.setState({all:resJSON});
   }
+  greatdeals=async(event)=>{
+    event.preventDefault();
+    const response = await fetch('/api/greatdeals/');
+    const resJSON = await response.json();
+    console.log("fsakf");
+    this.setState({all:resJSON});
+  }
   clearFilters(){
     this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,brandOption:null,all:allClothes,filter:{}});
   }
@@ -231,6 +238,7 @@ class Browse extends Component{
           />
         </div>
         <Button onClick={this.clearFilters}>Reset Filters</Button>
+        <Button onClick={this.greatdeals}>greatdeals</Button>
         </div>
         <div id="browseCards">
         {this.state.all.map((result)=>{
@@ -240,7 +248,7 @@ class Browse extends Component{
         <a target="_blank" rel="noopener noreferrer" href={result.websiteurl}><Card.Img variant="top" src={result.imageurl} /></a>
         <Card.Body>
           <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a>
-            {this.state.favorites[result.imageurl].favorite?<div><span onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'black'}}>
+            {this.state.favorites[result.imageurl].favorite?<div><span onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'pink'}}>
               <MdFavorite size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>
             </div>:<div><span onClick={event=>this.handleFav(event,result.imageurl)}>
               <MdFavoriteBorder size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>
