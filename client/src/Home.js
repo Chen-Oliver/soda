@@ -78,7 +78,7 @@ handleSignupClose = () =>{
       <div className="jumbotron d-flex align-items-center">
         <div className="container">
           <h2>SODA</h2>
-          {!this.props.loggedIn?<br/>:<h1 id="intro">{"Hello "+this.props.curUser+"! Welcome!"}</h1>}
+          {!this.props.loggedIn?<br/>:<h1 id="intro">{"Hello "+this.props.curUser+", Welcome!"}</h1>}
           {!this.props.loggedIn?<ButtonToolbar>
             <div className="login">
             <Button variant="light" size="lg" type="submit" onClick={this.handleLoginShow}>
