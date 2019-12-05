@@ -9,6 +9,7 @@ const bcrypt = require('bcryptjs');
 const http = require("http");
 const socketIO = require("socket.io");
 
+
 const PORT = process.env.PORT || 5000
 
 var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
@@ -378,6 +379,53 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
     res.send(rows);
     client.end();
 });
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+app.get('/api/knn/:season', cors(), async (req, res, next) => {
+  var spawn = require("child_process").spawn;
+  var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+  //
+  process.stdout.on('data', async function(data){
+    let data_string = await data.toString();
+    res.json(data_string);
+  });
+  // process.stdout.on('data', (data) => {
+  //     console.log(`data:${data}`);
+  //   });
+    // process.stderr.on('data', (data) => {
+    //   console.log(`error:${data}`);
+    // });
+    // process.on('close', () => {
+    //   console.log("Closed");
+    // });
+
+  // var options = {
+  //   args:
+  //   [
+  //     req.params.season, // starting funds
+  //   ]
+  // }
+  // console.log(options);
+  // const pyshell = require("python-shell");
+  // pyshell.PythonShell.run('nn/cnn_code/knn.py', options, function (err, data) {
+  //   if (err) res.json(err);
+  //   res.json(data.toString())
+  // });
+});
+
+// function knn(req, res) {
+//   console.log("rec!!")
+//   var spawn = require("child_process").spawn;
+//   var process = spawn('python3', ["nn/cnn_code/knn.py", req.params.season]);
+//   process.stdout.on('data', function (data) {
+//       console.log(data.toString())
+//     res.send(data.toString());
+//   });
+// }
 
 // Serve static files from the React frontend app
 app.use(express.static(path.join(__dirname, 'client/build')))

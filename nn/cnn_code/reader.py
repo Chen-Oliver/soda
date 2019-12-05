@@ -1,19 +1,25 @@
-# reader.py
-# ---------------
-# Licensing Information:  You are free to use or extend this projects for
-# educational purposes provided that (1) you do not distribute or publish
-# solutions, (2) you retain this notice, and (3) you provide clear
-# attribution to the University of Illinois at Urbana-Champaign
-#
-# Created by Justin Lizama (jlizama2@illinois.edu) on 09/28/2018
-"""
-This file is responsible for providing functions for reading the files
-"""
 from os import listdir
 from os.path import isfile, join
 import numpy as np
 from PIL import Image
 import json
+
+def fetch_from_db(types):
+    import os
+    import psycopg2
+
+    DATABASE_URL = os.environ['DATABASE_URL']
+
+    connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+    cursor = connection.cursor()
+    postgreSQL_select_Query = "Select imageURL, type from colors NATURAL JOIN clothing"
+
+    cursor.execute(postgreSQL_select_Query)
+    mobile_records = cursor.fetchall()
+
+    for row in mobile_records:
+        types[row[1]].append(row[0])
+
 
 def load_image( infilename ) :
     img = Image.open( infilename )
@@ -26,35 +32,48 @@ def load_data_json(filename):
         data = json.load(f)
         return data
 
-def load_dataset(filename, favorites):
+def load_dataset():
 
-    images = [(f, join(filename, f)) for f in listdir(filename) if isfile(join(filename, f))]
-    data_dict = load_data_json("../preprocess/data.json")
+    recs = load_data_json("nn/cnn_code/our_rec.json")
 
-    train_labels = []
+    summer = recs["summer"]
+    spring = recs['spring']
+    winter = recs['winter']
+    fall = recs['fall']
+
     train_set = []
+    train_label = []
+
+    for summ, spr, win, fa in zip(summer, spring, winter, fall):
+        train_set.append(summ)
+        train_label.append(0)
+
+        train_set.append(fa)
+        train_label.append(1)
+
+        train_set.append(win)
+        train_label.append(2)
+
+        train_set.append(spr)
+        train_label.append(3)
+
+
+    types = {'Sweater':[], 'Pants':[], 'Coat':[], 'Shirt':[], 'Jacket':[], 'Shoes':[]}
+
+    fetch_from_db(types)
+    
+
     rec_set = []
-    rec_names = []
+    count = 0
 
-    for image in images:
-        fname, image_path = image
+    for tops in (types['Sweater'] + types['Coat'] + types['Shirt'] + types['Jacket']):
+        for bots in (types['Pants']):
+            for shoe in (types['Shoes']):
+                temp = [tops, bots, shoe]
+                if temp not in train_set:
+                    rec_set.append([tops, bots, shoe])
+                    count += 1
 
-        in_fav = False
-        if data_dict[fname] in favorites:
-            train_labels.append(1)
-            in_fav = True
-        else:
-            train_labels.append(0)
+    url_to_jpg = load_data_json("nn/cnn_code/url_to_jpg.json")
 
-        im = Image.open(image_path)
-        np_im = np.array(im).flatten()
-        train_set.append(np_im)
-        # if not in_fav:
-        rec_set.append(np_im)
-        rec_names.append(fname)
-
-    train_set = np.array(train_set)
-    train_labels = np.array(train_labels)
-    rec_set = np.array(rec_set)
-
-    return train_set, train_labels, rec_set, rec_names
+    return train_set, train_label, rec_set, url_to_jpg

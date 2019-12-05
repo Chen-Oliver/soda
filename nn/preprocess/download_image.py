@@ -8,7 +8,8 @@ def find_nth(string, substring, n):
    else:
        return string.find(substring, find_nth(string, substring, n - 1) + 1)
 
-id = dict()
+jpg_to_url = dict()
+url_to_jpg = dict()
 with open('images.txt') as fp:
    count = 0
    for line in fp:
@@ -18,8 +19,8 @@ with open('images.txt') as fp:
        ending_comma = find_nth(content[::-1], ',', 2)
        content = content[starting_comma + 3 : -ending_comma - 2]
 
-       id[str(count) + ".jpg"] = content
-
+       jpg_to_url[str(count) + ".jpg"] = content
+       url_to_jpg[content] = str(count) + ".jpg"
 
        image_name = "../images/"+ str(count) + ".jpg"
        data = urllib.request.urlretrieve(content, image_name)
@@ -29,5 +30,8 @@ with open('images.txt') as fp:
 
        count += 1
 
-with open('data.json', 'w') as f:
-    json.dump(id, f)
+with open('jpg_to_url.json', 'w') as f:
+    json.dump(jpg_to_url, f)
+
+with open('url_to_jpg.json', 'w') as f:
+    json.dump(url_to_jpg, f)
