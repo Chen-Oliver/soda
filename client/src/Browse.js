@@ -12,10 +12,7 @@ const typeOptions = [
   { value: "Sweater", label: 'Sweater' }
 ]
 var brandOptions=[];
-<<<<<<< HEAD
-=======
 var allBrands=[];
->>>>>>> latest
 const colorOptions = [
   { value: "Red", label: 'Red' },
   { value: "Green", label: 'Green' },
