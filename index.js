@@ -257,7 +257,16 @@ app.get('/api/uniquecolors/', cors(), async (req, res, next) => {
   res.send(rows);
   client.end();
 });
-
+app.get('/api/versatile', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT name, price, gender, color, type, imageURL, c.websiteURL, brandName FROM clothing c NATURAL JOIN colors cl GROUP BY c.websiteURL, cl.color, cl.imageURL HAVING count(color) > 5 UNION SELECT name, price, gender, color, type, imageURL, c.websiteURL, brandName FROM clothing c NATURAL JOIN seasons s JOIN colors cl ON c.websiteURL = cl.websiteURL GROUP BY c.websiteURL, cl.imageURL, cl.color HAVING count(s) = 4').catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
 app.get('/api/getBrands', cors(), async (req, res, next) => {
   const client = new Client({
     connectionString: process.env.DATABASE_URL,
