@@ -11,19 +11,19 @@ class About extends Component{
   }
   render(){
     return(
-      <div>
+      <div className="about">
       <h3 className="header">Our mission</h3>
         <p className="text">
           We are The GoodBois. A team of fashion (and code) enthusiasts, and our mission is to help make the community a more stylish place to be.
-          We understand that fashion may not be a priority for you; however, you can still look great with the help of SODA! 
+          We understand that fashion may not be a priority for you; however, you can still look great with the help of SODA!
           There are so many ways to put together clean and stylish outfits -- why not let artificial intelligence put it together for you
           so that you can have an abundance of thoughtless, cool outfit ideas? 😉
         </p>
         <br/>
         <h3>About us</h3>
           <p className="text">
-          Our names are Oliver, Allen, Darren, and Steven. We are all third-year students at the University of Illinois at Urbana Champaign 
-          majoring in either Computer Science or Computer Engineering. 
+          Our names are Oliver, Allen, Darren, and Steven. We are all third-year students at the University of Illinois at Urbana Champaign
+          majoring in either Computer Science or Computer Engineering.
           </p>
           <div id="members">
             <h4>Oliver Chen</h4>

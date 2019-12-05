@@ -32,7 +32,7 @@ class Favorites extends Component{
     }
     this.setState({favorites:favDict});
     this.setState({friendFavs:fFav})
-    console.log(fFav);
+    // console.log(fFav);
   }
   handleRemove=async(event,imageurl)=>{
     //add/remove fav in neo4j database here...

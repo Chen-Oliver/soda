@@ -240,7 +240,7 @@ class Browse extends Component{
         <a target="_blank" rel="noopener noreferrer" href={result.websiteurl}><Card.Img variant="top" src={result.imageurl} /></a>
         <Card.Body>
           <Card.Title><a target="_blank" rel="noopener noreferrer" href={result.websiteurl}>{result.name}</a>
-            {this.state.favorites[result.imageurl].favorite?<div><span onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'pink'}}>
+            {this.state.favorites[result.imageurl].favorite?<div><span onClick={event=>this.handleFav(event,result.imageurl)} style={{color: 'black'}}>
               <MdFavorite size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>
             </div>:<div><span onClick={event=>this.handleFav(event,result.imageurl)}>
               <MdFavoriteBorder size={20}/></span><Button className="similar" size="sm" onClick={event=>this.similarItems(event,result.price,result.actual,result.type,result.gender)}>See Similar</Button>

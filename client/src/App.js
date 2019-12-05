@@ -39,7 +39,6 @@ class App extends Component {
             <Link to="/">Home</Link>
             <Link to="/browse">Browse</Link>
             <Link to="/favorites">Favorites</Link>
-            <Link to="/random">Random</Link>
             <Link to="/recommendations">Recommendations</Link>
             <Link to="/profile">Profile({this.state.curUser})</Link>
             {this.state.curUser==="admin"?<Link to="/admin">Admin Tools</Link>:null}
@@ -51,8 +50,7 @@ class App extends Component {
            <Route exact path='/' render={(props) => (<Home {...props} loginSuccess={this.loginSuccess} loggedIn={true} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/browse' render={(props) => (<Browse {...props} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/favorites' render={(props) => (<Favorites {...props} curUser={this.state.curUser} />)}></Route>
-           <Route exact path='/random' component={Random}></Route>
-           <Route exact path='/recommendations' component={Recommendations}></Route>
+           <Route exact path='/recommendations' render={(props) => (<Recommendations {...props} curUser={this.state.curUser} />)}></Route>
            <Route exact path='/profile' render={(props) => (<Profile {...props} curUser={this.state.curUser} />)}></Route>
            {this.state.curUser==="admin"?<Route exact path='/admin' component={Admin}></Route>:null}
            <Route exact path='/about' component={About}></Route>
