@@ -61,7 +61,7 @@ def load_dataset():
     types = {'Sweater':[], 'Pants':[], 'Coat':[], 'Shirt':[], 'Jacket':[], 'Shoes':[]}
 
     fetch_from_db(types)
-    
+
 
     rec_set = []
     count = 0

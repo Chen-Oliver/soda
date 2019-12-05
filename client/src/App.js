@@ -17,7 +17,7 @@ class App extends Component {
     super(props);
     this.state = {
       loggedIn:false,
-      curUser:"World"
+      curUser:""
     }
     this.loginSuccess=this.loginSuccess.bind(this);
   }
