@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "neo4j-driver": "^1.7.6",
     "pg": "^7.12.1",
+    "python-shell": "^1.0.8",
     "socket.io": "^2.3.0"
   }
 }
