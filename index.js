@@ -390,11 +390,55 @@ app.get('/api/filterAll/:types/:colors', cors(), async (req, res, next) => {
     res.send(rows);
     client.end();
 });
-
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
+app.get('/api/getBrands', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  const {rows} = await client.query('SELECT DISTINCT brandName from brands').catch((err)=>console.error(err));
+  res.send(rows);
+  client.end();
+});
+app.get('/api/browseSearch/:types/:colors/:price/:brands/:gender', cors(), async (req, res, next) => {
+  const client = new Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: true,
+    });
+    client.connect();
+  var typeFilters=req.params.types.split(",");
+  var filterStr="(";
+  for(var i=0;i<typeFilters.length;i++){
+    if(i==typeFilters.length-1)filterStr=filterStr+"type="+"\'"+typeFilters[i]+"\') AND (";
+    else filterStr=filterStr+"type="+"\'"+typeFilters[i]+"\' OR ";
+  }
+  var colorFilters=req.params.colors.split(",");
+  for(var i=0;i<colorFilters.length;i++){
+    if(i==colorFilters.length-1)filterStr=filterStr+"actual="+"\'"+colorFilters[i]+"\') AND (";
+    else filterStr=filterStr+"actual="+"\'"+colorFilters[i]+"\' OR ";
+  }
+  var brandFilters=req.params.brands.split(",");
+  for(var i=0;i<brandFilters.length;i++){
+    if(i==brandFilters.length-1)filterStr=filterStr+"brandName="+"\'"+brandFilters[i]+"\') AND (";
+    else filterStr=filterStr+"brandName="+"\'"+brandFilters[i]+"\' OR ";
+  }
+  var genderFilters=req.params.gender.split(",");
+  for(var i=0;i<genderFilters.length;i++){
+    if(i==genderFilters.length-1)filterStr=filterStr+"gender="+"\'"+genderFilters[i]+"\') AND (";
+    else filterStr=filterStr+"gender="+"\'"+genderFilters[i]+"\' OR ";
+  }
+  var priceFilters=req.params.price.split(",");
+  for(var i=0;i<priceFilters.length;i++){
+    if(i==priceFilters.length-1)filterStr=filterStr+"price<="+"\'"+priceFilters[i]+"\'))";
+    else if(i%2==0) filterStr=filterStr+"(price>="+"\'"+priceFilters[i]+"\' AND ";
+    else filterStr=filterStr+"price<="+"\'"+priceFilters[i]+"\') OR ";
+  }
+  // console.log(filterStr);
+  const {rows} = await client.query('SELECT DISTINCT * FROM clothing NATURAL JOIN colors NATURAL JOIN brands WHERE'+ filterStr+ "ORDER by price ASC").catch((err)=>console.error(err));
+  res.send(rows);
+  // res.json("fuck this");
+  client.end();
+});
 
 app.get('/api/knn/:season', cors(), async (req, res, next) => {
   var spawn = require("child_process").spawn;

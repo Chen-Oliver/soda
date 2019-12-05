@@ -13,7 +13,7 @@ def calc_l2(train_np, train_labels, rec_set, im_dict, season):
     for outfit in rec_set:
         # print(count)
         count += 1
-        if count == 300:
+        if count == 200:
             break
         top, bot, shoe = outfit
         rec = np.vstack( (np.vstack( (im_dict[top], im_dict[bot]) ), im_dict[shoe]) )
