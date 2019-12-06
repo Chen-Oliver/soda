@@ -135,6 +135,7 @@ class Browse extends Component{
     }
     const response = await fetch('/api/browseSearch/'+this.state.filter["type"]+"/"+this.state.filter["actual"]+"/"+prices+"/"+this.state.filter["brandname"]+"/"+this.state.filter["gender"]);
     const resJSON = await response.json();
+
     this.setState({all:resJSON});
   }
   /*
@@ -201,31 +202,41 @@ class Browse extends Component{
   }
   clearFilters(){
     this.setState({typeOption:null,actualOption:null,priceOption:null,genderOption:null,brandOption:null,all:allClothes});
-    this.setState({filter:{
-      ...this.state.filter,
-      ["type"]:["Coat","Jacket","Pants","Shirt","Shoes","Sweater"]
-      }
-    });
-    this.setState({filter:{
-      ...this.state.filter,
-      ["actual"]:["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"]
-      }
-    });
-    this.setState({filter:{
-      ...this.state.filter,
-      ["price"]:["0-25","25-50","50-100","100-150","150-250","250-10000"]
-      }
-    });
-    this.setState({filter:{
-      ...this.state.filter,
-      ["gender"]:["Male","Female"]
-      }
-    });
-    this.setState({filter:{
-      ...this.state.filter,
-      ["brandname"]:allBrands
-      }
-    });
+    // this.setState({filter:{
+    //   ...this.state.filter,
+    //   ["type"]:["Coat","Jacket","Pants","Shirt","Shoes","Sweater"]
+    //   }
+    // });
+    // this.setState({filter:{
+    //   ...this.state.filter,
+    //   ["actual"]:["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"]
+    //   }
+    // });
+    // this.setState({filter:{
+    //   ...this.state.filter,
+    //   ["price"]:["0-25","25-50","50-100","100-150","150-250","250-10000"]
+    //   }
+    // });
+    // this.setState({filter:{
+    //   ...this.state.filter,
+    //   ["gender"]:["Male","Female"]
+    //   }
+    // });
+    // this.setState({filter:{
+    //   ...this.state.filter,
+    //   ["brandname"]:allBrands
+    //   }
+    // });
+    var temp ={
+      "type":["Coat","Jacket","Pants","Shirt","Shoes","Sweater"],  //selected filters for clothing type
+      "actual":["Blue","Beige","Black","Gray","White","Burgundy","Purple","Pink","Green","Brown","Orange","Yellow","Red"], //selected filters for actual color
+      "price":["0-25","25-50","50-100","100-150","150-250","250-10000"],//price filters
+      "gender":["Male","Female"],
+      "brandname":allBrands
+    }
+    this.setState({filter:temp});
+
+    console.log(allClothes);
   }
   showAll(){
     if(this.state.all[0]==="Loading"){
